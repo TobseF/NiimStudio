@@ -12,6 +12,8 @@ Etiketten-App für den **NIIMBOT B18**. Bedienung und Design folgen der Original
   - Form: fett, unterstrichen, durchgestrichen, kursiv, invertiert, Größe, Ausrichtung, Unterschneidung, Zeilenabstand, Zeilenumbruch
   - Schriften: Systemschriften, eigene TTF/OTF hochladen, Zuletzt verwendet, Favoriten
   - Ausrichten/Spiegeln: 6 Ausrichtungen zum Etikett, Steuerkreuz mit Schrittweite, X/Y/Breite/Höhe/Drehung numerisch, Ebenen, Spiegelung, Sperren
+- **Stecker:** die 17 Steckersymbole aus dem Kabelfahnen-Designer (USB-A/B/C mit Buchsen, Mini, Micro, USB 3.0 Micro-B, HDMI, DisplayPort, RJ45, Klinke, Ladeklinke, DC, Magnet, Lightning, Kaltgerät). Der Name steht unter oder neben dem Symbol oder wird ausgeblendet; statt des automatischen Namens geht auch eigener Text, ebenso Symbolgröße und Großbuchstaben. Der erste Stecker kommt nach links, der zweite nach rechts.
+- **Aufbau:** Einseitig, Fahne (beidseitig: das Feld wird zweimal gedruckt, die Rückseite um 180° gedreht, dazwischen die Wickelzone Ø × π) oder Wickel. Kabel-Ø, Wickelzone und Faltmarken sind einstellbar. Gestaltet wird ein Feld; Vorschau und Druck setzen das ganze Etikett zusammen. Beim Umschalten skalieren die Elemente mit.
 - **Etikettenprofile:** frei editierbar (Bandbreite, Länge, Typ, Lücke, Eckenradius, Druckversatz, Dichte).
 - **Vorlagen:** Layout speichern, öffnen, umbenennen, duplizieren, löschen, jeweils mit Vorschaubild.
 - **Datenquelle:** Liste/CSV (Platzhalter {A}, {B}, …) oder Nummerierung ({N}). Jede Zeile ergibt ein Etikett.
@@ -19,6 +21,14 @@ Etiketten-App für den **NIIMBOT B18**. Bedienung und Design folgen der Original
 - **Einstellungen:** Drucker suchen und wählen, SPP/BLE, automatisch verbinden, Heartbeat, Protokollvariante, Drehung, Druckkopfbreite, Paketpause, Hilfslinien, TX/RX-Log mit Teilen, Testmuster.
 
 Code: `model/` (Datenmodell), `data/Store` (Persistenz), `render/` (gemeinsamer Renderer für Editor und Druck), `printer/PrinterManager` (Verbindung und Druck), `protocol/` + `transport/` (NIIMBOT-Protokoll), `ui/` (Jetpack Compose).
+
+## Steckersymbole bearbeiten
+
+Die Steckersymbole liegen als SVG-Dateien in `app/src/main/assets/connectors/` (`usba.svg`, `hdmi.svg` …). Datei bearbeiten (z. B. in Inkscape), App neu bauen, fertig.
+
+- Konvention: Höhe 100 Einheiten (`viewBox="0 0 <Breite> 100"`), Umrisse schwarz mit `stroke-width="9"`, Kontakte als schwarze Flächen. Das Seitenverhältnis kommt aus der viewBox.
+- Neuer Stecker: eine weitere SVG in den Ordner legen. Der Dateiname ist der Schlüssel. Der Name kommt aus dem String `conn_<dateiname>`, falls vorhanden (übersetzbar), sonst aus dem `<title>` der SVG.
+- Dateinamen bestehender Stecker nicht umbenennen, sonst finden gespeicherte Etiketten ihr Symbol nicht mehr.
 
 ## Sprachen
 
