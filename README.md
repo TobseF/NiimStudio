@@ -1,7 +1,38 @@
 # B18 Print
 
-A minimal Android app that connects to a **NIIMBOT B18** and prints a text label or a test pattern.
-It was built to check the Bluetooth link and the print protocol before adding any label design.
+Etiketten-App für den **NIIMBOT B18**. Bedienung und Design folgen der Original-App (NIIMBOT 6.6.9).
+
+## Funktionen
+
+- **Editor:** Elemente per Drag & Drop verschieben. Anfasser: rechts für die Breite, unten für die Höhe, Ecke zum Skalieren (bei Text mit Schriftgröße). Pinch-Zoom, Doppeltippen zum Bearbeiten, magnetische Hilfslinien (Mitte, Ränder, andere Elemente), Rückgängig/Wiederholen.
+- **Schnell-Leiste über der Auswahl:** Bearbeiten, Löschen, Duplizieren, 90° drehen, Ausrichten, Sperren.
+- **Elemente:** Text, Bild (mit Dithering, Schwelle, Invertieren), Symbol (über 200 Vektorsymbole, Suche, Favoriten), Datum/Uhrzeit (Format, Tage-Versatz, z. B. MHD), Barcode (Code 128, EAN, UPC, Code 39/93, ITF, Codabar), QR-Code / Data Matrix / Aztec / PDF417 (mit WLAN-Assistent), Formen und Linien, Seriennummer.
+- **Reiter je Element:**
+  - Inhalt
+  - Form: fett, unterstrichen, durchgestrichen, kursiv, invertiert, Größe, Ausrichtung, Unterschneidung, Zeilenabstand, Zeilenumbruch
+  - Schriften: Systemschriften, eigene TTF/OTF hochladen, Zuletzt verwendet, Favoriten
+  - Ausrichten/Spiegeln: 6 Ausrichtungen zum Etikett, Steuerkreuz mit Schrittweite, X/Y/Breite/Höhe/Drehung numerisch, Ebenen, Spiegelung, Sperren
+- **Etikettenprofile:** frei editierbar (Bandbreite, Länge, Typ, Lücke, Eckenradius, Druckversatz, Dichte).
+- **Vorlagen:** Layout speichern, öffnen, umbenennen, duplizieren, löschen, jeweils mit Vorschaubild.
+- **Datenquelle:** Liste/CSV (Platzhalter {A}, {B}, …) oder Nummerierung ({N}). Jede Zeile ergibt ein Etikett.
+- **Druck:** 1-Bit-Vorschau genau wie gedruckt, Kopien, Dichte, Fortschritt, Abbrechen.
+- **Einstellungen:** Drucker suchen und wählen, SPP/BLE, automatisch verbinden, Heartbeat, Protokollvariante, Drehung, Druckkopfbreite, Paketpause, Hilfslinien, TX/RX-Log mit Teilen, Testmuster.
+
+Code: `model/` (Datenmodell), `data/Store` (Persistenz), `render/` (gemeinsamer Renderer für Editor und Druck), `printer/PrinterManager` (Verbindung und Druck), `protocol/` + `transport/` (NIIMBOT-Protokoll), `ui/` (Jetpack Compose).
+
+## Sprachen
+
+Die App ist auf Englisch (Standard) und Deutsch verfügbar. Beim ersten Start folgt sie der Handysprache und nimmt Englisch, wenn es dafür keine Übersetzung gibt. Unter **Einstellungen → Sprache** lässt sie sich umstellen. Ab Android 13 geht das auch über die Pro-App-Sprache in den Systemeinstellungen.
+
+**Neue Sprache hinzufügen** (Beispiel Französisch):
+
+1. `app/src/main/res/values/strings.xml` nach `app/src/main/res/values-fr/strings.xml` kopieren.
+2. Alle Texte übersetzen. Platzhalter wie `%1$s` und `%1$d` sowie `{N}` bleiben erhalten. Bei Symbolnamen (`sym_…`) steht nach `|` eine Liste von Suchbegriffen.
+3. Die Unit-Tests ausführen: `gradlew testDebugUnitTest`.
+
+Mehr ist nicht nötig. Der Build erkennt den neuen Ordner und nimmt die Sprache in die Auswahl auf (`BuildConfig.LANGUAGES`, `L10n.available`). `TranslationsTest` meldet fehlende Schlüssel, abweichende Platzhalter, fehlende Plural- oder Array-Einträge sowie unbekannte Schlüssel.
+
+Code: `L10n.kt` regelt Sprachwahl und Kontext. Die Drucker- und Protokollschicht ist sprachneutral (Statuscodes); übersetzt wird erst in der UI (`ui/Texts.kt`).
 
 ## What the official app (NIIMBOT 6.6.9) does
 

@@ -1,7 +1,18 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
+
+/**
+ * App languages, derived from the resource folders: English lives in values/, every
+ * translation in values-<lang>/strings.xml. Adding such a folder is all a new language needs.
+ */
+val appLanguages: List<String> = listOf("en") + (file("src/main/res").listFiles() ?: emptyArray())
+    .filter { it.isDirectory && Regex("values-[a-z]{2,3}(-r[A-Z]{2})?").matches(it.name) && File(it, "strings.xml").exists() }
+    .map { it.name.removePrefix("values-").replace("-r", "-") }
+    .sorted()
 
 android {
     namespace = "dev.b18print"
@@ -9,18 +20,35 @@ android {
 
     defaultConfig {
         applicationId = "dev.b18print"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1"
+        versionCode = 3
+        versionName = "0.3"
+        buildConfigField("String", "LANGUAGES", "\"${appLanguages.joinToString(",")}\"")
+    }
+
+    androidResources {
+        // Lists the languages for Android 13+ per-app language settings.
+        generateLocaleConfig = true
+    }
+
+    bundle {
+        // The language can be switched in the app, so every translation must ship.
+        language { enableSplit = false }
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             // Signed with the debug key so the release APK is installable for testing.
             signingConfig = signingConfigs.getByName("debug")
         }
+    }
+
+    buildFeatures {
+        compose = true
+        buildConfig = true
     }
 
     compileOptions {
@@ -33,6 +61,19 @@ android {
 }
 
 dependencies {
+    val composeBom = platform("androidx.compose:compose-bom:2024.12.01")
+    implementation(composeBom)
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.foundation:foundation")
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.activity:activity-compose:1.9.3")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    implementation("androidx.core:core-ktx:1.15.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+    implementation("com.google.zxing:core:3.5.3")
+
     testImplementation("junit:junit:4.13.2")
 }
