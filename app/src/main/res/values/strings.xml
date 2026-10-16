@@ -273,6 +273,50 @@
     <string name="scanning">Searching…</string>
     <string name="no_b18_found">No B18 found yet. Switch the printer on or enable “Show all devices”.</string>
     <string name="paired">paired</string>
+    <string name="add_connector">Connector</string>
+    <string name="tab_connector">Connector</string>
+    <string name="tab_layout">Layout</string>
+    <string name="conn_usba">USB-A</string>
+    <string name="conn_usbaf">USB-A socket</string>
+    <string name="conn_usbb">USB-B</string>
+    <string name="conn_usbmini">USB Mini-B</string>
+    <string name="conn_usbmicro">USB Micro-B</string>
+    <string name="conn_usbc">USB-C</string>
+    <string name="conn_usbcf">USB-C socket</string>
+    <string name="conn_usbmicrob">USB 3.0 Micro-B</string>
+    <string name="conn_hdmi">HDMI</string>
+    <string name="conn_dp">DisplayPort</string>
+    <string name="conn_rj45">RJ45 / LAN</string>
+    <string name="conn_jack">3.5 mm jack</string>
+    <string name="conn_thinjack">Thin charge jack</string>
+    <string name="conn_dc">DC barrel</string>
+    <string name="conn_magnet">Magnetic charger</string>
+    <string name="conn_lightning">Lightning</string>
+    <string name="conn_iec">Mains / IEC C13</string>
+    <string name="connector_change">Change connector</string>
+    <string name="connector_label">Connector name</string>
+    <string name="connector_label_below">below symbol</string>
+    <string name="connector_label_beside">beside symbol</string>
+    <string name="connector_label_none">hidden</string>
+    <string name="connector_text">Text (empty = connector name)</string>
+    <string name="connector_icon_scale">Symbol size</string>
+    <string name="uppercase">Uppercase</string>
+    <string name="sides_single">Single</string>
+    <string name="sides_flag">Flag (both sides)</string>
+    <string name="sides_wrap">Wrap</string>
+    <string name="sides_flag_short">Flag</string>
+    <string name="sides_wrap_short">Wrap</string>
+    <string name="sides_hint_single">One panel only. For flat stickers or binders.</string>
+    <string name="sides_hint_flag">Both halves carry the same content, the rear one turned 180°. Once folded around the cable, the flag reads from the front and the back.</string>
+    <string name="sides_hint_wrap">The content repeats in the same orientation — for wrapping, so it shows all the way round the cable.</string>
+    <string name="cable_diameter">Cable Ø</string>
+    <string name="wrap_zone">Wrap zone</string>
+    <string name="auto_wrap_zone">Wrap zone from Ø (Ø × π)</string>
+    <string name="fold_marks">Print fold marks</string>
+    <string name="layout_summary">Label %1$s mm = panel %2$s mm + wrap zone %3$s mm + panel %2$s mm</string>
+    <string name="layout_design_hint">You design one panel; it is printed on both halves.</string>
+    <string name="layout_panel_short">The panel is very short – choose a longer label profile or a thinner cable.</string>
+    <string name="layout_overview">Whole label</string>
 
     <!-- Plurals -->
     <plurals name="label_count">

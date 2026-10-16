@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="100" viewBox="0 0 240 100">
+  <title>Magnetic charger</title>
+  <g fill="none" stroke="#000" stroke-width="9" stroke-linejoin="round" stroke-linecap="round">
+    <rect x="4.5" y="4.5" width="231" height="91" rx="20"/>
+    <rect x="22" y="24" width="196" height="52" rx="11"/>
+  </g>
+  <g fill="#000">
+    <circle cx="60" cy="50" r="17.5"/>
+    <circle cx="180" cy="50" r="17.5"/>
+    <circle cx="107.5" cy="50" r="9"/>
+    <circle cx="132.5" cy="50" r="9"/>
+  </g>
+</svg>

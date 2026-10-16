@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="230" height="100" viewBox="0 0 230 100">
+  <title>Lightning</title>
+  <g fill="none" stroke="#000" stroke-width="9" stroke-linejoin="round" stroke-linecap="round">
+    <rect x="4.5" y="26" width="221" height="48" rx="24"/>
+  </g>
+  <g fill="#000">
+    <rect x="35.735" y="40" width="13.28" height="20"/>
+    <rect x="56.485" y="40" width="13.28" height="20"/>
+    <rect x="77.235" y="40" width="13.28" height="20"/>
+    <rect x="97.985" y="40" width="13.28" height="20"/>
+    <rect x="118.735" y="40" width="13.28" height="20"/>
+    <rect x="139.485" y="40" width="13.28" height="20"/>
+    <rect x="160.235" y="40" width="13.28" height="20"/>
+    <rect x="180.985" y="40" width="13.28" height="20"/>
+  </g>
+</svg>

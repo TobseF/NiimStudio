@@ -12,6 +12,9 @@ import android.text.TextPaint
 import com.google.zxing.common.BitMatrix
 import dev.b18print.model.AppSettings
 import dev.b18print.model.BarcodeEl
+import dev.b18print.model.ConnLabel
+import dev.b18print.model.ConnectorEl
+import dev.b18print.model.SideMode
 import dev.b18print.model.DateEl
 import dev.b18print.model.Element
 import dev.b18print.model.FitMode
@@ -73,7 +76,95 @@ object Renderer {
             is BarcodeEl -> drawBarcode(c, e, DataVars.apply(e.content, rc.vars), rc)
             is QrEl -> drawMatrix(c, e, DataVars.apply(e.content, rc.vars), rc)
             is ShapeEl -> drawShape(c, e)
+            is ConnectorEl -> drawConnector(c, e, rc.vars)
         }
+        c.restore()
+    }
+
+    // ------------------------------------------------------------ connectors
+
+    /** Layout of a connector cell (all mm), mirroring the cable-flag designer. */
+    private class ConnLayout(
+        val con: Connector, val iconH: Float, val iconW: Float, val text: String,
+        val textSize: Float, val gap: Float, val width: Float, val below: Boolean,
+    )
+
+    fun connectorText(e: ConnectorEl, vars: Map<String, String> = emptyMap()): String {
+        if (e.label == ConnLabel.NONE) return ""
+        val t = DataVars.apply(e.text.ifBlank { Connectors.name(e.key) }, vars).trim()
+        return if (e.upper) t.uppercase(dev.b18print.L10n.locale()) else t
+    }
+
+    private fun textWidth(st: TextStyle, text: String, sizeMm: Float): Float =
+        if (text.isEmpty()) 0f else paintFor(st.copy(underline = false, strike = false, inverse = false), sizeMm).measureText(text) / TU
+
+    private fun connLayout(e: ConnectorEl, h: Float, text: String): ConnLayout? {
+        val con = Connectors.find(e.key) ?: return null
+        val scale = e.iconScale.coerceIn(0.2f, 1f)
+        if (text.isEmpty()) {
+            val ih = h * scale
+            return ConnLayout(con, ih, con.ar * ih, "", 0f, 0f, con.ar * ih, false)
+        }
+        return if (e.label == ConnLabel.BELOW) {
+            var ts = maxOf(0.8f, h * 0.24f)
+            val pad = h * 0.07f
+            var ih = minOf(h * scale, h - ts - pad)
+            if (ih < h * 0.3f) {
+                ih = h * 0.55f
+                ts = maxOf(0.8f, h - ih - pad)
+            }
+            val iw = con.ar * ih
+            ConnLayout(con, ih, iw, text, ts, pad, maxOf(iw, textWidth(e.style, text, ts)), true)
+        } else {
+            val ts = maxOf(0.8f, h * 0.34f)
+            val ih = h * scale
+            val iw = con.ar * ih
+            val g = h * 0.14f
+            ConnLayout(con, ih, iw, text, ts, g, iw + g + textWidth(e.style, text, ts), false)
+        }
+    }
+
+    /** Width the connector needs at height [h] without shrinking. */
+    fun connectorNaturalWidth(e: ConnectorEl, h: Float): Float =
+        connLayout(e, h, connectorText(e))?.width ?: h
+
+    private fun drawConnector(c: Canvas, e: ConnectorEl, vars: Map<String, String> = emptyMap()) {
+        val f = e.frame
+        val l = connLayout(e, f.h, connectorText(e, vars)) ?: run {
+            drawMissing(c, f.w, f.h)
+            return
+        }
+        // Shrink uniformly when the box is narrower than the natural width.
+        val k = minOf(1f, f.w / l.width)
+        c.save()
+        c.translate((f.w - l.width * k) / 2, f.h * (1 - k) / 2)
+        c.scale(k, k)
+        val h = f.h
+        val paint = paintFor(e.style.copy(underline = false, strike = false, inverse = false), l.textSize)
+        if (l.text.isEmpty()) {
+            c.save(); c.translate((l.width - l.iconW) / 2, (h - l.iconH) / 2); Connectors.draw(c, l.con, l.iconH, Color.BLACK); c.restore()
+        } else if (l.below) {
+            val block = l.iconH + l.gap + l.textSize
+            val top = (h - block) / 2
+            c.save(); c.translate((l.width - l.iconW) / 2, top); Connectors.draw(c, l.con, l.iconH, Color.BLACK); c.restore()
+            drawLine(c, l.text, paint, l.width / 2, top + l.iconH + l.gap + l.textSize / 2, center = true)
+        } else {
+            c.save(); c.translate(0f, (h - l.iconH) / 2); Connectors.draw(c, l.con, l.iconH, Color.BLACK); c.restore()
+            drawLine(c, l.text, paint, l.iconW + l.gap, h / 2, center = false)
+        }
+        c.restore()
+    }
+
+    /** One line of text whose ink is vertically centred on [cy]. */
+    private fun drawLine(c: Canvas, text: String, paint: TextPaint, x: Float, cy: Float, center: Boolean) {
+        val b = android.graphics.Rect()
+        paint.getTextBounds(text, 0, text.length, b)
+        val w = paint.measureText(text)
+        c.save()
+        c.scale(1 / TU, 1 / TU)
+        val px = x * TU - if (center) w / 2 else 0f
+        val py = cy * TU - (b.top + b.bottom) / 2f
+        c.drawText(text, px, py, paint)
         c.restore()
     }
 
@@ -310,10 +401,16 @@ object Renderer {
     // ------------------------------------------------------------ print pipeline
 
     /** Renders the label at print resolution in editor orientation (white background). */
+    /**
+     * Renders the whole printed label in editor orientation (white background).
+     * Flag labels get the panel twice with the wrap zone in between, the second copy
+     * turned 180° so the folded flag reads from both sides; wrap labels repeat it unturned.
+     */
     fun renderLabel(doc: LabelDoc, rc: RenderCtx, scale: Float = DOTS_PER_MM.toFloat(), applyOffsets: Boolean = true): Bitmap {
-        val w = (doc.widthMm * scale).toInt().coerceAtLeast(1)
-        val h = (doc.heightMm * scale).toInt().coerceAtLeast(1)
-        val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+        val total = doc.totalLengthMm
+        val fullW = if (doc.portrait) doc.widthMm else total
+        val fullH = if (doc.portrait) total else doc.heightMm
+        val bmp = Bitmap.createBitmap((fullW * scale).toInt().coerceAtLeast(1), (fullH * scale).toInt().coerceAtLeast(1), Bitmap.Config.ARGB_8888)
         val c = Canvas(bmp)
         c.drawColor(Color.WHITE)
         c.scale(scale, scale)
@@ -323,7 +420,34 @@ object Renderer {
             // Offsets are defined along the tape (x) and across it (y) in landscape design.
             if (doc.portrait) c.translate(oy, ox) else c.translate(ox, oy)
         }
-        drawElements(c, doc, rc)
+        val pw = doc.widthMm
+        val ph = doc.heightMm
+        fun panel() {
+            c.save()
+            c.clipRect(0f, 0f, pw, ph)
+            drawElements(c, doc, rc)
+            c.restore()
+        }
+        panel()
+        if (doc.sides != SideMode.SINGLE) {
+            val second = total - doc.panelLengthMm
+            c.save()
+            if (doc.portrait) c.translate(0f, second) else c.translate(second, 0f)
+            if (doc.sides == SideMode.FLAG) c.rotate(180f, pw / 2, ph / 2)
+            panel()
+            c.restore()
+            if (doc.foldMarks) {
+                val p = Paint().apply {
+                    color = Color.BLACK
+                    style = Paint.Style.STROKE
+                    strokeWidth = maxOf(0.125f, doc.profile.tapeWidthMm * 0.02f)
+                    pathEffect = android.graphics.DashPathEffect(floatArrayOf(doc.profile.tapeWidthMm * 0.09f, doc.profile.tapeWidthMm * 0.09f), 0f)
+                }
+                for (at in listOf(doc.panelLengthMm, second)) {
+                    if (doc.portrait) c.drawLine(0f, at, pw, at, p) else c.drawLine(at, 0f, at, ph, p)
+                }
+            }
+        }
         return bmp
     }
 

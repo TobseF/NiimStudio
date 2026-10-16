@@ -11,6 +11,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dev.b18print.data.Store
 import dev.b18print.model.BarcodeEl
+import dev.b18print.model.ConnectorEl
 import dev.b18print.model.DateEl
 import dev.b18print.model.Element
 import dev.b18print.model.FitMode
@@ -38,8 +39,12 @@ enum class AlignMode { LEFT, HCENTER, RIGHT, TOP, VCENTER, BOTTOM }
 /** Bottom panel pages. */
 enum class PanelTab(@androidx.annotation.StringRes val title: Int) {
     ADD(R.string.tab_add), TEMPLATES(R.string.tab_templates), DATA(R.string.tab_data),
+    LAYOUT(R.string.tab_layout),
     CONTENT(R.string.tab_content), STYLE(R.string.tab_style), FONTS(R.string.tab_fonts), ARRANGE(R.string.tab_arrange), SYMBOL(R.string.tab_symbol),
+    CONNECTOR(R.string.tab_connector),
 }
+
+private val docTabs = listOf(PanelTab.ADD, PanelTab.TEMPLATES, PanelTab.DATA, PanelTab.LAYOUT)
 
 class EditorViewModel(app: Application) : AndroidViewModel(app) {
 
@@ -54,6 +59,9 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
 
     /** Symbol picker adds a new symbol (true) or replaces the selected one (false). */
     var symbolPickerForNew by mutableStateOf(true)
+
+    /** Connector picker adds a new connector (true) or replaces the selected one (false). */
+    var connectorPickerForNew by mutableStateOf(true)
 
     /** Data row shown in the editor and print preview. */
     var previewRow by mutableIntStateOf(0)
@@ -150,21 +158,43 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
 
     // ------------------------------------------------------------------ selection
 
+    /** True on the start page: nothing selected, "Add" tab open. Back then leaves the app. */
+    val atHome: Boolean get() = selectedId == null && tab == PanelTab.ADD && panelExpanded
+
+    /** One step back towards the start page (Android back button). */
+    fun navigateBack() {
+        when {
+            tab == PanelTab.SYMBOL || tab == PanelTab.CONNECTOR ->
+                tab = if (selected != null) PanelTab.CONTENT else PanelTab.ADD
+            selectedId != null -> {
+                select(null)
+                tab = PanelTab.ADD
+            }
+            tab != PanelTab.ADD -> tab = PanelTab.ADD
+            !panelExpanded -> panelExpanded = true
+        }
+    }
+
     fun select(id: String?) {
         val changed = id != selectedId
         selectedId = id
         if (!changed) return
         tab = when (selected) {
-            null -> if (tab in listOf(PanelTab.ADD, PanelTab.TEMPLATES, PanelTab.DATA)) tab else PanelTab.ADD
+            null -> if (tab in docTabs) tab else PanelTab.ADD
             is TextEl, is DateEl -> if (tab in listOf(PanelTab.CONTENT, PanelTab.STYLE, PanelTab.FONTS, PanelTab.ARRANGE)) tab else PanelTab.STYLE
             else -> if (tab == PanelTab.ARRANGE) tab else PanelTab.CONTENT
         }
     }
 
     fun tabsFor(e: Element?): List<PanelTab> = when (e) {
-        null -> if (tab == PanelTab.SYMBOL) listOf(PanelTab.SYMBOL) else listOf(PanelTab.ADD, PanelTab.TEMPLATES, PanelTab.DATA)
+        null -> when (tab) {
+            PanelTab.SYMBOL -> listOf(PanelTab.SYMBOL)
+            PanelTab.CONNECTOR -> listOf(PanelTab.CONNECTOR)
+            else -> docTabs
+        }
         is TextEl, is DateEl -> listOf(PanelTab.CONTENT, PanelTab.STYLE, PanelTab.FONTS, PanelTab.ARRANGE)
         is SymbolEl -> if (tab == PanelTab.SYMBOL) listOf(PanelTab.SYMBOL) else listOf(PanelTab.CONTENT, PanelTab.ARRANGE)
+        is ConnectorEl -> if (tab == PanelTab.CONNECTOR) listOf(PanelTab.CONNECTOR) else listOf(PanelTab.CONTENT, PanelTab.FONTS, PanelTab.ARRANGE)
         else -> listOf(PanelTab.CONTENT, PanelTab.ARRANGE)
     }
 
@@ -238,6 +268,34 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
             h = src.height * s
         }
         add(ImageEl(newId(), centered(w, h), file = file))
+    }
+
+    /** Adds a connector pictogram (with its name below) or replaces the selected one's type. */
+    fun addOrReplaceConnector(key: String) {
+        val sel = selected
+        if (!connectorPickerForNew && sel is ConnectorEl) {
+            updateElement(sel.id) { (it as ConnectorEl).copy(key = key) }
+            return
+        }
+        var h = doc.heightMm * 0.86f
+        val proto = ConnectorEl(newId(), Frame(0f, 0f, 1f, h), key = key)
+        var w = Renderer.connectorNaturalWidth(proto, h)
+        // Like the cable-flag designer: first connector on the left, second on the right.
+        // Both must fit next to each other, so each gets at most half of the panel.
+        val margin = minOf(2.5f, doc.widthMm * 0.05f)
+        val existing = doc.elements.count { it is ConnectorEl }
+        val maxW = if (existing < 2) (doc.widthMm - 3 * margin) / 2 else doc.widthMm * 0.9f
+        if (w > maxW) {
+            h *= maxW / w
+            w = maxW
+        }
+        val frame = when (existing) {
+            0 -> centered(w, h).copy(x = margin)
+            1 -> centered(w, h).copy(x = doc.widthMm - margin - w)
+            else -> centered(w, h)
+        }
+        add(proto.copy(frame = frame))
+        tab = PanelTab.CONNECTOR
     }
 
     fun addOrReplaceSymbol(key: String) {
@@ -327,6 +385,42 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
     fun setProfile(p: LabelProfile) {
         Store.updateSettings { it.copy(lastProfileId = p.id) }
         update(doc.copy(profile = p))
+    }
+
+    /**
+     * Changes the single/flag/wrap layout. When the panel gets shorter or longer, element
+     * centres move proportionally along the tape so the design keeps its arrangement.
+     */
+    fun updateLayout(merge: String? = null, transform: (LabelDoc) -> LabelDoc) {
+        val old = doc
+        val nd = transform(old)
+        val factor = nd.panelLengthMm / old.panelLengthMm
+        val elements = if (factor == 1f || old.portrait != nd.portrait) nd.elements else nd.elements.map { scaledAlongTape(it, factor, nd.portrait) }
+        update(nd.copy(elements = elements), merge)
+    }
+
+    /**
+     * Scales an element for a panel that became [k] times as long: the position along the
+     * tape follows the panel, elements with a fixed aspect ratio (text, connectors, symbols,
+     * codes) shrink or grow uniformly, others only along the tape.
+     */
+    private fun scaledAlongTape(e: Element, k: Float, portrait: Boolean): Element {
+        val f = e.frame
+        val ncx = if (portrait) f.cx else f.cx * k
+        val ncy = if (portrait) f.cy * k else f.cy
+        val quarterTurn = Math.round(f.rotation / 90f) % 2 != 0
+        val lengthIsWidth = !portrait != quarterTurn
+        val nf = when {
+            e.keepsAspect -> f.copy(w = f.w * k, h = f.h * k)
+            lengthIsWidth -> f.copy(w = f.w * k)
+            else -> f.copy(h = f.h * k)
+        }
+        val scaled = when (e) {
+            is TextEl -> e.copy(style = e.style.copy(sizePt = (e.style.sizePt * k).coerceIn(2f, 300f)))
+            is DateEl -> e.copy(style = e.style.copy(sizePt = (e.style.sizePt * k).coerceIn(2f, 300f)))
+            else -> e
+        }
+        return normalize(scaled.withFrame(nf.withCenter(ncx, ncy)))
     }
 
     fun togglePortrait() {

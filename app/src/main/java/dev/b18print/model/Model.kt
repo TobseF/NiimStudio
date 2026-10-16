@@ -188,6 +188,32 @@ data class ShapeEl(
     override fun withId(id: String) = copy(id = id)
 }
 
+/** Position of the connector name relative to the pictogram. */
+@Serializable
+enum class ConnLabel { BELOW, BESIDE, NONE }
+
+/** Connector pictogram from the cable-flag designer (see render/Connectors.kt). */
+@Serializable
+@SerialName("connector")
+data class ConnectorEl(
+    override val id: String,
+    override val frame: Frame,
+    override val locked: Boolean = false,
+    val key: String = "usbc",
+    val label: ConnLabel = ConnLabel.BELOW,
+    /** Empty = the connector's name in the app language. */
+    val text: String = "",
+    /** Pictogram height relative to the element height. */
+    val iconScale: Float = 0.8f,
+    val upper: Boolean = false,
+    val style: TextStyle = TextStyle(font = "sys:sans-serif-condensed", bold = true),
+) : Element() {
+    override fun withFrame(f: Frame) = copy(frame = f)
+    override fun withLocked(l: Boolean) = copy(locked = l)
+    override fun withId(id: String) = copy(id = id)
+    override val keepsAspect get() = true
+}
+
 /** An editable label paper definition. */
 @Serializable
 data class LabelProfile(
@@ -249,10 +275,41 @@ data class LabelDoc(
     val data: DataSource = DataSource(),
     val templateId: String? = null,
     val templateName: String? = null,
+    /** Single panel, cable flag (two panels, the second turned 180°) or wrap (repeated). */
+    val sides: SideMode = SideMode.SINGLE,
+    val cableDiameterMm: Float = 5f,
+    /** Wrap zone = cable Ø × π when true, otherwise [wrapZoneMm]. */
+    val autoWrapZone: Boolean = true,
+    val wrapZoneMm: Float = 15.7f,
+    val foldMarks: Boolean = false,
 ) {
-    val widthMm get() = if (portrait) profile.tapeWidthMm else profile.lengthMm
-    val heightMm get() = if (portrait) profile.lengthMm else profile.tapeWidthMm
+    /** Unprinted zone between the two panels of a flag/wrap label. */
+    val wrapZone: Float
+        get() = when {
+            sides == SideMode.SINGLE -> 0f
+            autoWrapZone -> cableDiameterMm * Math.PI.toFloat()
+            else -> wrapZoneMm
+        }
+
+    /** Length of the designed panel along the tape. */
+    val panelLengthMm: Float
+        get() = if (sides == SideMode.SINGLE) profile.lengthMm else ((profile.lengthMm - wrapZone) / 2).coerceAtLeast(MIN_PANEL_MM)
+
+    /** Printed length: the profile length, or longer if two minimal panels do not fit. */
+    val totalLengthMm: Float
+        get() = if (sides == SideMode.SINGLE) profile.lengthMm else maxOf(profile.lengthMm, 2 * panelLengthMm + wrapZone)
+
+    /** Size of the design canvas (one panel). */
+    val widthMm get() = if (portrait) profile.tapeWidthMm else panelLengthMm
+    val heightMm get() = if (portrait) panelLengthMm else profile.tapeWidthMm
+
+    companion object {
+        const val MIN_PANEL_MM = 3f
+    }
 }
+
+@Serializable
+enum class SideMode { SINGLE, FLAG, WRAP }
 
 @Serializable
 data class Template(

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="205" height="100" viewBox="0 0 205 100">
+  <title>USB Micro-B</title>
+  <g fill="none" stroke="#000" stroke-width="9" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M6.209 13.927A8 8 0 0 1 14.081 4.5L190.919 4.5A8 8 0 0 1 198.791 13.927L185.192 88.927A8 8 0 0 1 177.32 95.5L27.68 95.5A8 8 0 0 1 19.808 88.927Z"/>
+  </g>
+  <g fill="#000">
+    <rect x="44" y="53.2" width="117" height="16.8"/>
+    <rect x="48.914" y="30" width="13.572" height="23.2"/>
+    <rect x="72.314" y="30" width="13.572" height="23.2"/>
+    <rect x="95.714" y="30" width="13.572" height="23.2"/>
+    <rect x="119.114" y="30" width="13.572" height="23.2"/>
+    <rect x="142.514" y="30" width="13.572" height="23.2"/>
+  </g>
+</svg>

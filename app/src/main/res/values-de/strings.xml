@@ -272,6 +272,50 @@
     <string name="scanning">Suche läuft…</string>
     <string name="no_b18_found">Noch kein B18 gefunden. Drucker einschalten oder „Alle Geräte anzeigen“.</string>
     <string name="paired">gekoppelt</string>
+    <string name="add_connector">Stecker</string>
+    <string name="tab_connector">Stecker</string>
+    <string name="tab_layout">Aufbau</string>
+    <string name="conn_usba">USB-A</string>
+    <string name="conn_usbaf">USB-A Buchse</string>
+    <string name="conn_usbb">USB-B</string>
+    <string name="conn_usbmini">USB Mini-B</string>
+    <string name="conn_usbmicro">USB Micro-B</string>
+    <string name="conn_usbc">USB-C</string>
+    <string name="conn_usbcf">USB-C Buchse</string>
+    <string name="conn_usbmicrob">USB 3.0 Micro-B</string>
+    <string name="conn_hdmi">HDMI</string>
+    <string name="conn_dp">DisplayPort</string>
+    <string name="conn_rj45">RJ45 / LAN</string>
+    <string name="conn_jack">Klinke 3,5 mm</string>
+    <string name="conn_thinjack">Ladeklinke dünn</string>
+    <string name="conn_dc">DC-Hohlstecker</string>
+    <string name="conn_magnet">Magnet-Ladestecker</string>
+    <string name="conn_lightning">Lightning</string>
+    <string name="conn_iec">Netz / Kaltgerät</string>
+    <string name="connector_change">Stecker ändern</string>
+    <string name="connector_label">Steckername</string>
+    <string name="connector_label_below">unter Symbol</string>
+    <string name="connector_label_beside">neben Symbol</string>
+    <string name="connector_label_none">ausblenden</string>
+    <string name="connector_text">Text (leer = Steckername)</string>
+    <string name="connector_icon_scale">Symbolgröße</string>
+    <string name="uppercase">Großbuchstaben</string>
+    <string name="sides_single">Einseitig</string>
+    <string name="sides_flag">Fahne (beidseitig)</string>
+    <string name="sides_wrap">Wickel</string>
+    <string name="sides_flag_short">Fahne</string>
+    <string name="sides_wrap_short">Wickel</string>
+    <string name="sides_hint_single">Nur ein Feld. Für flache Aufkleber oder Ordner.</string>
+    <string name="sides_hint_flag">Beide Hälften tragen denselben Inhalt, die hintere um 180° gedreht. Ums Kabel gefaltet ist die Fahne von vorn und hinten lesbar.</string>
+    <string name="sides_hint_wrap">Der Inhalt wiederholt sich gleich ausgerichtet — zum Umwickeln, damit er rundum am Kabel auftaucht.</string>
+    <string name="cable_diameter">Kabel-Ø</string>
+    <string name="wrap_zone">Wickelzone</string>
+    <string name="auto_wrap_zone">Wickelzone aus Ø berechnen (Ø × π)</string>
+    <string name="fold_marks">Faltmarke mitdrucken</string>
+    <string name="layout_summary">Etikett %1$s mm = Feld %2$s mm + Wickelzone %3$s mm + Feld %2$s mm</string>
+    <string name="layout_design_hint">Du gestaltest ein Feld, gedruckt wird es auf beide Hälften.</string>
+    <string name="layout_panel_short">Das Feld ist sehr kurz – wähle ein längeres Etikettenprofil oder ein dünneres Kabel.</string>
+    <string name="layout_overview">Gesamtes Etikett</string>
 
     <!-- Plurals -->
     <plurals name="label_count">

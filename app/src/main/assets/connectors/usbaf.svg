@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="245" height="100" viewBox="0 0 245 100">
+  <title>USB-A socket</title>
+  <g fill="#000">
+    <path fill-rule="evenodd" d="M18 0H227A18 18 0 0 1 245 18V82A18 18 0 0 1 227 100H18A18 18 0 0 1 0 82V18A18 18 0 0 1 18 0ZM35 25H210A8 8 0 0 1 218 33V67A8 8 0 0 1 210 75H35A8 8 0 0 1 27 67V33A8 8 0 0 1 35 25Z"/>
+  </g>
+</svg>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="100" viewBox="0 0 200 100">
+  <title>USB Mini-B</title>
+  <g fill="none" stroke="#000" stroke-width="9" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M4.5 36.349A10 10 0 0 1 7.681 29.034L31.119 7.185A10 10 0 0 1 37.938 4.5L162.062 4.5A10 10 0 0 1 168.881 7.185L192.319 29.034A10 10 0 0 1 195.5 36.349L195.5 85.5A10 10 0 0 1 185.5 95.5L14.5 95.5A10 10 0 0 1 4.5 85.5Z"/>
+  </g>
+  <g fill="#000">
+    <rect x="44" y="56.04" width="112" height="15.96"/>
+    <rect x="48.704" y="34" width="12.992" height="22.04"/>
+    <rect x="71.104" y="34" width="12.992" height="22.04"/>
+    <rect x="93.504" y="34" width="12.992" height="22.04"/>
+    <rect x="115.904" y="34" width="12.992" height="22.04"/>
+    <rect x="138.304" y="34" width="12.992" height="22.04"/>
+  </g>
+</svg>

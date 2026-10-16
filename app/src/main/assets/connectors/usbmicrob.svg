@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="270" height="100" viewBox="0 0 270 100">
+  <title>USB 3.0 Micro-B</title>
+  <g fill="none" stroke="#000" stroke-width="9" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M14.5 95.5A10 10 0 0 1 4.5 85.5L4.5 45.643A10 10 0 0 1 6.843 39.211L33.003 8.068A10 10 0 0 1 40.66 4.5L229.34 4.5A10 10 0 0 1 236.997 8.068L263.157 39.211A10 10 0 0 1 265.5 45.643L265.5 85.5A10 10 0 0 1 255.5 95.5Z"/>
+  </g>
+  <g fill="#000">
+    <rect x="38" y="56.04" width="194" height="15.96"/>
+    <rect x="43.82" y="34" width="16.074" height="22.04"/>
+    <rect x="71.534" y="34" width="16.074" height="22.04"/>
+    <rect x="99.249" y="34" width="16.074" height="22.04"/>
+    <rect x="126.963" y="34" width="16.074" height="22.04"/>
+    <rect x="154.677" y="34" width="16.074" height="22.04"/>
+    <rect x="182.391" y="34" width="16.074" height="22.04"/>
+    <rect x="210.106" y="34" width="16.074" height="22.04"/>
+  </g>
+</svg>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="245" height="100" viewBox="0 0 245 100">
+  <title>USB-C</title>
+  <g fill="none" stroke="#000" stroke-width="9" stroke-linejoin="round" stroke-linecap="round">
+    <rect x="4.5" y="4.5" width="236" height="91" rx="45.5"/>
+  </g>
+  <g fill="#000">
+    <rect x="28" y="53.04" width="189" height="15.96"/>
+    <rect x="32.295" y="31" width="8.591" height="22.04"/>
+    <rect x="49.477" y="31" width="8.591" height="22.04"/>
+    <rect x="66.659" y="31" width="8.591" height="22.04"/>
+    <rect x="83.841" y="31" width="8.591" height="22.04"/>
+    <rect x="101.023" y="31" width="8.591" height="22.04"/>
+    <rect x="118.205" y="31" width="8.591" height="22.04"/>
+    <rect x="135.386" y="31" width="8.591" height="22.04"/>
+    <rect x="152.568" y="31" width="8.591" height="22.04"/>
+    <rect x="169.75" y="31" width="8.591" height="22.04"/>
+    <rect x="186.932" y="31" width="8.591" height="22.04"/>
+    <rect x="204.114" y="31" width="8.591" height="22.04"/>
+  </g>
+</svg>

@@ -1,5 +1,6 @@
 package dev.b18print.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.ui.res.stringResource
 import dev.b18print.R
 import androidx.compose.foundation.background
@@ -64,6 +65,8 @@ import dev.b18print.printer.PrinterManager
 @Composable
 fun EditorScreen(vm: EditorViewModel, onOpenSettings: () -> Unit, onOpenProfiles: () -> Unit) {
     val ctx = LocalContext.current
+    // Back leaves sub-pages (pickers, element tabs, templates …) first; only the start page exits.
+    BackHandler(enabled = !vm.atHome) { vm.navigateBack() }
     val conn by PrinterManager.state.collectAsState()
     val profiles by Store.profiles.collectAsState()
     val settings by Store.settings.collectAsState()
@@ -166,7 +169,11 @@ fun EditorScreen(vm: EditorViewModel, onOpenSettings: () -> Unit, onOpenProfiles
             }
             Icon(Icons.Outlined.Info, null, Modifier.size(20.dp), tint = Color(0xFF666666))
             Text(
-                " ${vm.doc.profile.sizeLabel}" + (vm.doc.templateName?.let { " · $it" } ?: ""),
+                " ${vm.doc.profile.sizeLabel}" + when (vm.doc.sides) {
+                    dev.b18print.model.SideMode.SINGLE -> ""
+                    dev.b18print.model.SideMode.FLAG -> " · " + stringResource(R.string.sides_flag_short)
+                    dev.b18print.model.SideMode.WRAP -> " · " + stringResource(R.string.sides_wrap_short)
+                } + (vm.doc.templateName?.let { " · $it" } ?: ""),
                 fontSize = 14.sp, color = Color(0xFF555555), maxLines = 1, overflow = TextOverflow.Ellipsis,
             )
         }

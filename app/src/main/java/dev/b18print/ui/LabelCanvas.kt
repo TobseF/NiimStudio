@@ -1,5 +1,12 @@
 package dev.b18print.ui
 
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.runtime.produceState
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.border
+import androidx.compose.foundation.Image
 import androidx.compose.ui.res.stringResource
 import dev.b18print.R
 import androidx.compose.foundation.Canvas
@@ -116,13 +123,17 @@ fun LabelCanvas(vm: EditorViewModel, modifier: Modifier = Modifier) {
         pan = Offset.Zero
     }
 
+    /** Space at the bottom for the whole-label preview of flag/wrap layouts. */
+    fun reserve(d: LabelDoc): Float = if (d.sides != dev.b18print.model.SideMode.SINGLE) with(density) { 92.dp.toPx() } else 0f
+
     fun scale(d: LabelDoc = vm.doc): Float {
         val pad = with(density) { 28.dp.toPx() }
-        val s = min((size.width - 2 * pad) / d.widthMm, (size.height - 2 * pad) / d.heightMm)
+        val s = min((size.width - 2 * pad) / d.widthMm, (size.height - reserve(d) - 2 * pad) / d.heightMm)
         return max(s, 1f) * zoom
     }
 
-    fun base(s: Float, d: LabelDoc = vm.doc) = Offset((size.width - d.widthMm * s) / 2f, (size.height - d.heightMm * s) / 2f)
+    fun base(s: Float, d: LabelDoc = vm.doc) =
+        Offset((size.width - d.widthMm * s) / 2f, (size.height - reserve(d) - d.heightMm * s) / 2f)
     fun origin(s: Float) = base(s) + pan
     fun toMm(p: Offset): Offset {
         val s = scale()
@@ -380,6 +391,33 @@ fun LabelCanvas(vm: EditorViewModel, modifier: Modifier = Modifier) {
                         drawLine(AppColors.Selection, tip, tip - (n * sign + perp) * (a * 0.6f), 2.dp.toPx())
                         drawLine(AppColors.Selection, tip, tip - (n * sign - perp) * (a * 0.6f), 2.dp.toPx())
                     }
+                }
+            }
+        }
+
+        // Whole printed label (both panels) for flag and wrap layouts
+        if (doc.sides != dev.b18print.model.SideMode.SINGLE) {
+            val strip by produceState<android.graphics.Bitmap?>(null, doc, vm.previewRow) {
+                value = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Default) {
+                    val sc = (900f / maxOf(doc.totalLengthMm, 1f)).coerceAtMost(12f)
+                    Renderer.renderLabel(doc, RenderCtx(vars = DataVars.vars(doc.data, vm.previewRow)), sc, applyOffsets = false)
+                }
+            }
+            strip?.let { bmp ->
+                Column(
+                    Modifier.align(Alignment.BottomCenter).padding(horizontal = 16.dp, vertical = 10.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Text(stringResource(R.string.layout_overview), fontSize = 11.sp, color = AppColors.TextGrey)
+                    Image(
+                        bmp.asImageBitmap(), stringResource(R.string.layout_overview),
+                        Modifier
+                            .padding(top = 3.dp)
+                            .heightIn(max = 56.dp)
+                            .widthIn(max = 320.dp)
+                            .border(1.dp, AppColors.Divider),
+                        contentScale = androidx.compose.ui.layout.ContentScale.Fit,
+                    )
                 }
             }
         }

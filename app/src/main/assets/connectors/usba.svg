@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="230" height="100" viewBox="0 0 230 100">
+  <title>USB-A</title>
+  <g fill="none" stroke="#000" stroke-width="9" stroke-linejoin="round" stroke-linecap="round">
+    <rect x="4.5" y="4.5" width="221" height="91" rx="14"/>
+  </g>
+  <g fill="#000">
+    <rect x="40" y="53.94" width="150" height="18.06"/>
+    <rect x="47.875" y="29" width="21.75" height="24.94"/>
+    <rect x="85.375" y="29" width="21.75" height="24.94"/>
+    <rect x="122.875" y="29" width="21.75" height="24.94"/>
+    <rect x="160.375" y="29" width="21.75" height="24.94"/>
+  </g>
+</svg>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="290" height="100" viewBox="0 0 290 100">
+  <title>HDMI</title>
+  <g fill="none" stroke="#000" stroke-width="9" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M4.5 24.501A10 10 0 0 1 7.87 17.015L19.161 7.014A10 10 0 0 1 25.792 4.5L264.208 4.5A10 10 0 0 1 270.839 7.014L282.13 17.015A10 10 0 0 1 285.5 24.501L285.5 65.426A10 10 0 0 1 282.04 72.991L258.817 93.065A10 10 0 0 1 252.277 95.5L37.723 95.5A10 10 0 0 1 31.183 93.065L7.96 72.991A10 10 0 0 1 4.5 65.426Z"/>
+  </g>
+  <g fill="#000">
+    <rect x="40" y="54.04" width="210" height="15.96"/>
+    <rect x="44.773" y="32" width="9.545" height="22.04"/>
+    <rect x="63.864" y="32" width="9.545" height="22.04"/>
+    <rect x="82.955" y="32" width="9.545" height="22.04"/>
+    <rect x="102.045" y="32" width="9.545" height="22.04"/>
+    <rect x="121.136" y="32" width="9.545" height="22.04"/>
+    <rect x="140.227" y="32" width="9.545" height="22.04"/>
+    <rect x="159.318" y="32" width="9.545" height="22.04"/>
+    <rect x="178.409" y="32" width="9.545" height="22.04"/>
+    <rect x="197.5" y="32" width="9.545" height="22.04"/>
+    <rect x="216.591" y="32" width="9.545" height="22.04"/>
+    <rect x="235.682" y="32" width="9.545" height="22.04"/>
+  </g>
+</svg>

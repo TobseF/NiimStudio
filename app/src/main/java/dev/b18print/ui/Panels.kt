@@ -80,6 +80,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.b18print.data.Store
 import dev.b18print.model.BarcodeEl
+import dev.b18print.model.ConnectorEl
 import dev.b18print.model.DataMode
 import dev.b18print.model.DateEl
 import dev.b18print.model.Element
@@ -145,6 +146,8 @@ fun BottomPanel(vm: EditorViewModel, modifier: Modifier = Modifier) {
                 Modifier.size(56.dp, 52.dp).clickable {
                     if (vm.tab == PanelTab.SYMBOL) {
                         vm.tab = if (sel is SymbolEl) PanelTab.CONTENT else PanelTab.ADD
+                    } else if (vm.tab == PanelTab.CONNECTOR) {
+                        vm.tab = if (sel is ConnectorEl) PanelTab.CONTENT else PanelTab.ADD
                     } else {
                         vm.panelExpanded = !vm.panelExpanded
                     }
@@ -168,6 +171,8 @@ fun BottomPanel(vm: EditorViewModel, modifier: Modifier = Modifier) {
                     PanelTab.FONTS -> sel?.let { FontsPanel(vm, it) }
                     PanelTab.ARRANGE -> sel?.let { ArrangePanel(vm, it) }
                     PanelTab.SYMBOL -> SymbolPicker(vm)
+                    PanelTab.CONNECTOR -> ConnectorPicker(vm)
+                    PanelTab.LAYOUT -> LayoutPanel(vm)
                 }
             }
         }
@@ -194,6 +199,7 @@ private fun AddPanel(vm: EditorViewModel) {
         Item(Icons.Filled.TextFields, stringResource(R.string.add_text)) { vm.addText() },
         Item(Icons.Outlined.Image, stringResource(R.string.add_image)) { pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
         Item(Icons.Outlined.EmojiEmotions, stringResource(R.string.add_symbol)) { vm.symbolPickerForNew = true; vm.tab = PanelTab.SYMBOL },
+        Item(Icons.Filled.Usb, stringResource(R.string.add_connector)) { vm.select(null); vm.connectorPickerForNew = true; vm.tab = PanelTab.CONNECTOR },
         Item(Icons.Outlined.Schedule, stringResource(R.string.add_time)) { vm.addDate() },
         Item(Icons.Filled.ViewWeek, stringResource(R.string.add_barcode)) { vm.addBarcode() },
         Item(Icons.Filled.QrCode2, stringResource(R.string.add_qr)) { vm.addQr() },
@@ -411,6 +417,7 @@ private fun ContentPanel(vm: EditorViewModel, e: Element) {
             is BarcodeEl -> BarcodeContent(vm, e)
             is QrEl -> QrContent(vm, e)
             is ShapeEl -> ShapeContent(vm, e)
+            is ConnectorEl -> ConnectorContent(vm, e)
         }
     }
 }
@@ -584,12 +591,14 @@ private fun ShapeContent(vm: EditorViewModel, e: ShapeEl) {
 private fun styleOf(e: Element): TextStyle? = when (e) {
     is TextEl -> e.style
     is DateEl -> e.style
+    is ConnectorEl -> e.style
     else -> null
 }
 
 private fun withStyle(e: Element, st: TextStyle): Element = when (e) {
     is TextEl -> e.copy(style = st)
     is DateEl -> e.copy(style = st)
+    is ConnectorEl -> e.copy(style = st)
     else -> e
 }
 
