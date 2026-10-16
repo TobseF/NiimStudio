@@ -207,7 +207,7 @@ fun LabelCanvas(vm: EditorViewModel, modifier: Modifier = Modifier) {
                 var lastTapTime = 0L
                 var lastTapPos = Offset.Zero
                 awaitEachGesture {
-                    val down = awaitFirstDown(requireUnconsumed = false)
+                    val down = awaitFirstDown(requireUnconsumed = true) // taps handled by the floating bar are ignored here
                     val startMm = toMm(down.position)
                     val sel = vm.selected
                     val handle = sel?.let { hitHandle(it, down.position) }
@@ -441,6 +441,16 @@ fun LabelCanvas(vm: EditorViewModel, modifier: Modifier = Modifier) {
                 Modifier
                     .offset { IntOffset(x.roundToInt(), y.roundToInt()) }
                     .onSizeChanged { barSize = it }
+                    // Swallow touches on the bar (also between its buttons) so the canvas never sees them.
+                    .pointerInput(Unit) {
+                        awaitEachGesture {
+                            awaitFirstDown(requireUnconsumed = false).consume()
+                            do {
+                                val ev = awaitPointerEvent()
+                                ev.changes.forEach { it.consume() }
+                            } while (ev.changes.any { it.pressed })
+                        }
+                    }
                     .clip(RoundedCornerShape(12.dp))
                     .background(Color(0xFF111111))
                     .height(48.dp),

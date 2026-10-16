@@ -342,6 +342,8 @@ data class AppSettings(
     val favoriteFonts: List<String> = emptyList(),
     val recentFonts: List<String> = emptyList(),
     val snapping: Boolean = true,
+    /** Last values set by hand in value editors, per unit ("mm", "°", "" …), most recent first. */
+    val recentValues: Map<String, List<Float>> = emptyMap(),
     /** "system" or a language code such as "en", "de". */
     val language: String = "system",
 )

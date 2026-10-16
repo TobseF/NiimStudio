@@ -316,6 +316,9 @@
     <string name="layout_design_hint">Du gestaltest ein Feld, gedruckt wird es auf beide Hälften.</string>
     <string name="layout_panel_short">Das Feld ist sehr kurz – wähle ein längeres Etikettenprofil oder ein dünneres Kabel.</string>
     <string name="layout_overview">Gesamtes Etikett</string>
+    <string name="stepper_round">Runden:</string>
+    <string name="stepper_recent">Zuletzt:</string>
+    <string name="stepper_no_recent">noch keine</string>
 
     <!-- Plurals -->
     <plurals name="label_count">

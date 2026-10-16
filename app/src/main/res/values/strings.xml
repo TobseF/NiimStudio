@@ -317,6 +317,9 @@
     <string name="layout_design_hint">You design one panel; it is printed on both halves.</string>
     <string name="layout_panel_short">The panel is very short – choose a longer label profile or a thinner cable.</string>
     <string name="layout_overview">Whole label</string>
+    <string name="stepper_round">Round:</string>
+    <string name="stepper_recent">Recent:</string>
+    <string name="stepper_no_recent">none yet</string>
 
     <!-- Plurals -->
     <plurals name="label_count">
