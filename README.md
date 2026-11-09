@@ -1,107 +1,189 @@
-# B18 Print
+<p align="right">
+  <img src="docs/media/flags/gb.svg" height="14" alt=""> <b>English</b>
+  &nbsp;·&nbsp;
+  <a href="README.de.md"><img src="docs/media/flags/de.svg" height="14" alt=""> Deutsch</a>
+</p>
 
-Etiketten-App für den **NIIMBOT B18**. Bedienung und Design folgen der Original-App (NIIMBOT 6.6.9).
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/media/banner-dark.svg">
+    <img src="docs/media/banner-light.svg" width="100%" alt="NiimStudio – design and print labels on your NIIMBOT printer">
+  </picture>
+</p>
 
-## Funktionen
+<p align="center">
+  <a href="https://github.com/TobseF/NiimStudio/releases/latest"><img src="https://img.shields.io/github/v/release/TobseF/NiimStudio?style=flat-square&color=F5413D&label=release" alt="Latest release"></a>
+  <img src="https://img.shields.io/badge/Android-8.0%2B-3DDC84?style=flat-square&logo=android&logoColor=white" alt="Android 8.0+">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue?style=flat-square" alt="License: GPL-3.0"></a>
+  <img src="https://img.shields.io/badge/internet-not%20required-555?style=flat-square" alt="No internet permission">
+</p>
 
-- **Editor:** Elemente per Drag & Drop verschieben. Anfasser: rechts für die Breite, unten für die Höhe, Ecke zum Skalieren (bei Text mit Schriftgröße). Pinch-Zoom, Doppeltippen zum Bearbeiten, magnetische Hilfslinien (Mitte, Ränder, andere Elemente), Rückgängig/Wiederholen.
-- **Schnell-Leiste über der Auswahl:** Bearbeiten, Löschen, Duplizieren, 90° drehen, Ausrichten, Sperren.
-- **Elemente:** Text, Bild (mit Dithering, Schwelle, Invertieren), Symbol (über 200 Vektorsymbole, Suche, Favoriten), Datum/Uhrzeit (Format, Tage-Versatz, z. B. MHD), Barcode (Code 128, EAN, UPC, Code 39/93, ITF, Codabar), QR-Code / Data Matrix / Aztec / PDF417 (mit WLAN-Assistent), Formen und Linien, Seriennummer.
-- **Reiter je Element:**
-  - Inhalt
-  - Form: fett, unterstrichen, durchgestrichen, kursiv, invertiert, Größe, Ausrichtung, Unterschneidung, Zeilenabstand, Zeilenumbruch
-  - Schriften: Systemschriften, eigene TTF/OTF hochladen, Zuletzt verwendet, Favoriten
-  - Ausrichten/Spiegeln: 6 Ausrichtungen zum Etikett, Steuerkreuz mit Schrittweite, X/Y/Breite/Höhe/Drehung numerisch, Ebenen, Spiegelung, Sperren
-- **Werte bearbeiten:** Tippen auf einen Zahlenwert (X, Y, Breite, Höhe, Drehung und alle anderen Zahlenfelder) klappt darunter einen Bearbeitungsbereich auf, statt ein Popup zu öffnen. Jede Änderung wirkt sofort auf dem Etikett. Er enthält ◀ Schrittweite ▶ (Antippen wechselt die Schrittweite), Runden: nächste ganze Zahl, 5er ab und auf, 10er auf (z. B. 11 → 10 · 15 · 20, 14,4 → 10 · 14 · 15 · 20), direkte Eingabe und die letzten 3 von Hand gesetzten Werte je Einheit.
-- **Stecker:** die 17 Steckersymbole aus dem Kabelfahnen-Designer (USB-A/B/C mit Buchsen, Mini, Micro, USB 3.0 Micro-B, HDMI, DisplayPort, RJ45, Klinke, Ladeklinke, DC, Magnet, Lightning, Kaltgerät). Der Name steht unter oder neben dem Symbol oder wird ausgeblendet; statt des automatischen Namens geht auch eigener Text, ebenso Symbolgröße und Großbuchstaben. Der erste Stecker kommt nach links, der zweite nach rechts.
-- **Aufbau:** Einseitig, Fahne (beidseitig: das Feld wird zweimal gedruckt, die Rückseite um 180° gedreht, dazwischen die Wickelzone Ø × π) oder Wickel. Kabel-Ø, Wickelzone und Faltmarken sind einstellbar. Gestaltet wird ein Feld; Vorschau und Druck setzen das ganze Etikett zusammen. Beim Umschalten skalieren die Elemente mit.
-- **Etikettenprofile:** frei editierbar (Bandbreite, Länge, Typ, Lücke, Eckenradius, Druckversatz, Dichte).
-- **Vorlagen:** Layout speichern, öffnen, umbenennen, duplizieren, löschen, jeweils mit Vorschaubild.
-- **Datenquelle:** Liste/CSV (Platzhalter {A}, {B}, …) oder Nummerierung ({N}). Jede Zeile ergibt ein Etikett.
-- **Druck:** 1-Bit-Vorschau genau wie gedruckt, Kopien, Dichte, Fortschritt, Abbrechen.
-- **Einstellungen:** Drucker suchen und wählen, SPP/BLE, automatisch verbinden, Heartbeat, Protokollvariante, Drehung, Druckkopfbreite, Paketpause, Hilfslinien, TX/RX-Log mit Teilen, Testmuster.
+<p align="center">
+  <b>The free label designer for NIIMBOT printers.</b><br>
+  Design cable flags, storage labels and price tags on your phone and print them over Bluetooth –<br>
+  no account, no cloud, no ads.
+</p>
 
-Code: `model/` (Datenmodell), `data/Store` (Persistenz), `render/` (gemeinsamer Renderer für Editor und Druck), `printer/PrinterManager` (Verbindung und Druck), `protocol/` + `transport/` (NIIMBOT-Protokoll), `ui/` (Jetpack Compose).
+<p align="center">
+  <a href="https://github.com/TobseF/NiimStudio/releases/latest"><img src="https://raw.githubusercontent.com/Kunzisoft/Github-badge/main/get-it-on-github.png" height="60" alt="Get it on GitHub"></a>
+  <a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/TobseF/NiimStudio"><img src="https://raw.githubusercontent.com/ImranR98/Obtainium/main/assets/graphics/badge_obtainium.png" height="60" alt="Get it on Obtainium"></a>
+</p>
 
-## Steckersymbole bearbeiten
+<p align="center">
+  <img src="docs/media/teaser-en.gif" width="320" alt="NiimStudio in action: adding a connector and text, resizing, aligning, cable flag and print preview">
+</p>
 
-Die Steckersymbole liegen als SVG-Dateien in `app/src/main/assets/connectors/` (`usba.svg`, `hdmi.svg` …). Datei bearbeiten (z. B. in Inkscape), App neu bauen, fertig.
+## <img src="docs/media/icons/features.svg" width="26" align="top" alt=""> Features
 
-- Konvention: Höhe 100 Einheiten (`viewBox="0 0 <Breite> 100"`), Umrisse schwarz mit `stroke-width="9"`, Kontakte als schwarze Flächen. Das Seitenverhältnis kommt aus der viewBox.
-- Neuer Stecker: eine weitere SVG in den Ordner legen. Der Dateiname ist der Schlüssel. Der Name kommt aus dem String `conn_<dateiname>`, falls vorhanden (übersetzbar), sonst aus dem `<title>` der SVG.
-- Dateinamen bestehender Stecker nicht umbenennen, sonst finden gespeicherte Etiketten ihr Symbol nicht mehr.
+- **What you see is what you print** – drag & drop, pinch-zoom, snap guides, undo/redo and a 1-bit print preview that matches the label exactly.
+- **Everything a label needs** – text, images, 200+ symbols, date & best-before, barcodes, QR codes, serial numbers, shapes and lines.
+- **Precise layout** – align to the label, nudge with a move pad, and edit any value inline with live preview, rounding and your recent values.
+- **Cable labels** – 17 connector symbols (USB, HDMI, RJ45, DC, …) and cable flags that are printed on both sides and wrap around the cable.
+- **Profiles & templates** – editable label sizes, and layouts saved as templates with a preview.
+- **Batch printing** – fill placeholders from a list or CSV, or number labels automatically.
+- **Private by design** – works fully offline, no account, not even the internet permission.
+- **Your language** – English and German, easy to add more.
 
-## Sprachen
+## <img src="docs/media/icons/screens.svg" width="26" align="top" alt=""> Screenshots
 
-Die App ist auf Englisch (Standard) und Deutsch verfügbar. Beim ersten Start folgt sie der Handysprache und nimmt Englisch, wenn es dafür keine Übersetzung gibt. Unter **Einstellungen → Sprache** lässt sie sich umstellen. Ab Android 13 geht das auch über die Pro-App-Sprache in den Systemeinstellungen.
+<table>
+  <tr>
+    <td align="center"><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="160" alt=""><br><sub>Connectors</sub></td>
+    <td align="center"><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="160" alt=""><br><sub>Inline value editor</sub></td>
+    <td align="center"><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="160" alt=""><br><sub>Align &amp; arrange</sub></td>
+    <td align="center"><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="160" alt=""><br><sub>Cable flag</sub></td>
+    <td align="center"><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" width="160" alt=""><br><sub>Print preview</sub></td>
+  </tr>
+</table>
 
-**Neue Sprache hinzufügen** (Beispiel Französisch):
+## <img src="docs/media/icons/download.svg" width="26" align="top" alt=""> Download & install
 
-1. `app/src/main/res/values/strings.xml` nach `app/src/main/res/values-fr/strings.xml` kopieren.
-2. Alle Texte übersetzen. Platzhalter wie `%1$s` und `%1$d` sowie `{N}` bleiben erhalten. Bei Symbolnamen (`sym_…`) steht nach `|` eine Liste von Suchbegriffen.
-3. Die Unit-Tests ausführen: `gradlew testDebugUnitTest`.
+NiimStudio runs on **Android 8.0 or newer** and needs Bluetooth. Pick whichever way you like:
 
-Mehr ist nicht nötig. Der Build erkennt den neuen Ordner und nimmt die Sprache in die Auswahl auf (`BuildConfig.LANGUAGES`, `L10n.available`). `TranslationsTest` meldet fehlende Schlüssel, abweichende Platzhalter, fehlende Plural- oder Array-Einträge sowie unbekannte Schlüssel.
-
-Code: `L10n.kt` regelt Sprachwahl und Kontext. Die Drucker- und Protokollschicht ist sprachneutral (Statuscodes); übersetzt wird erst in der UI (`ui/Texts.kt`).
-
-## What the official app (NIIMBOT 6.6.9) does
-
-- **UI:** Flutter (`libapp.so`). Its Dart packages include `niimbot_connector`, `niimbot_print_setting_plugin` and `niimbot_flutter_canvas`.
-- **Printer code:** a Java SDK, `com.gengcon.www.jcprintersdk`, reached over the `com.niimbot.printer/Method/Channel` platform channel.
-- **Packing:** the code is packed with DexHelper/SecNeo. `classes.dex` is a 21 KB stub, and the real DEX files sit inside `lib/armeabi-v7a/libdatajar.so`. Their header and index tables are encrypted, but the data section is plaintext. That leaves the class names, method names and constants readable, though the code can't be fully decompiled.
-- **B18 classes:**
-  - `printer/b18/B18V3PrintTask`
-  - `printer/b18/B18NewPrintTask`
-  - `B18PrinterInfoGetter` / `B18PrinterInfoSetter`
-  - `factory/printerfactory/B18Factory`
-  - the `B18_PRINTER` constant
-- **Transport:** classic Bluetooth SPP. It uses `createRfcommSocketToServiceRecord` / `createInsecureRfcommSocketToServiceRecord` with UUID `00001101-0000-1000-8000-00805F9B34FB` (`NiimbotSppPacket`, `BluetoothConnHelper`).
-- **Protocol:** the SDK constants (`START_PRINT`, `START_PAGE_PRINT`, `END_PAGE_PRINT`, `END_PRINT`, `QUERY_PRINTER_STATUS`, `PRINT_DENSITY`, `SET_LABEL_TYPE_*`, `NO_RIBBON`, `SET_PRINT_MODE_HEAT_TRANSFER`, …) match the publicly documented NIIMBOT protocol, as reverse-engineered by [niimbluelib](https://github.com/MultiMote/niimbluelib).
-
-### Frame format
-
-`55 55 | cmd | len | data | xor(cmd,len,data) | AA AA`. The Connect frame is prefixed with `03`.
-
-### Print sequence (default "V3" variant)
-
-| Step | TX | Expected RX |
+| | How | Updates |
 |---|---|---|
-| Connect | `C1 [01]` | `C2` |
-| Model id | `40 [08]` | `48` → `0E 00` = 3584 = B18 |
-| Density | `21 [d]` | `31 [01]` |
-| Label type | `23 [t]` | `33 [01]` |
-| Print start | `01 [pages u16, 0,0,0,0, 0]` | `02 [01]` |
-| Page start | `03 [01]` | `04 [01]` |
-| Page size | `13 [rows u16, cols u16, copies u16]` | `14 [01]` |
-| Rows | `84` empty / `83` indexed / `85` bitmap; no reply | – |
-| Page end | `E3 [01]` | `E4 [01]` |
-| Poll status | `A3 [01]` | `B3 [page u16, print %, feed %, …]` until page == copies |
-| Print end | `F3 [01]` | `F4 [01]` |
+| **GitHub Releases** | Download `NiimStudio-<version>-release.apk` from the [latest release](https://github.com/TobseF/NiimStudio/releases/latest) and open it. | manual |
+| **Obtainium** | [Add NiimStudio to Obtainium](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/TobseF/NiimStudio) with one tap. | automatic |
+| **Komi Store** | Search for **NiimStudio** in [Komi Store](https://github.com/komi-store/komi-store) (formerly GitHub Store). | automatic |
+| **F-Droid** | Coming soon. | automatic |
 
-The B18 print head is **96 dots** (12 mm at 203 dpi). Each row is 12 bytes, MSB first. The 3-byte "black pixel count" field holds per-32-dot chunk counts.
+<details>
+<summary><b>Install with Obtainium</b></summary>
 
-The SDK's B18 tasks can't be decoded byte for byte, so the app offers three variants:
-- **V3 / B1-style:** the default.
-- **Legacy / D110-style:** 1-byte start, PrintClear, 4-byte size, PrintQuantity.
-- **V4:** 9-byte start, 13-byte size.
+1. Install [Obtainium](https://github.com/ImranR98/Obtainium) (from F-Droid or its GitHub releases).
+2. On your phone, tap the **Get it on Obtainium** badge above – or open Obtainium, tap **Add app** and paste
+   `https://github.com/TobseF/NiimStudio`.
+3. Tap **Install**. Obtainium checks GitHub for new versions and offers each update.
 
-"Auto" picks V4 when the printer reports protocol v4+, otherwise V3.
+</details>
 
-## Build
+<details>
+<summary><b>Install with Komi Store</b></summary>
 
+1. Install [Komi Store](https://github.com/komi-store/komi-store) (formerly GitHub Store) – from
+   [F-Droid](https://f-droid.org/packages/zed.rainxch.githubstore/) or its GitHub releases.
+2. Search for **NiimStudio** (or open the repository `TobseF/NiimStudio`).
+3. Tap **Install**. Komi Store keeps the app up to date.
+
+</details>
+
+<details>
+<summary><b>F-Droid</b></summary>
+
+<a href="#"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" height="60" alt="F-Droid (coming soon)"></a>
+
+NiimStudio is prepared for F-Droid (store texts and graphics in `fastlane/`). The link will appear here once
+the app is published.
+
+</details>
+
+## <img src="docs/media/icons/printer.svg" width="26" align="top" alt=""> Supported printers
+
+| Printer | Status |
+|---|---|
+| **NIIMBOT B18** | ✅ tested |
+| Other NIIMBOT models | probably work if they use the same protocol – untested, [feedback welcome](https://github.com/TobseF/NiimStudio/issues) |
+
+## <img src="docs/media/icons/install.svg" width="26" align="top" alt=""> First print in one minute
+
+1. Switch the printer on and open NiimStudio. Allow Bluetooth access.
+2. Tap the **Bluetooth** button and pick your printer (e.g. `B18-…`).
+3. Choose your label size at the top (e.g. **12×40**), add text, symbols or connectors.
+4. Tap **Print**.
+
+---
+
+## <img src="docs/media/icons/build.svg" width="26" align="top" alt=""> Development
+
+Kotlin, Jetpack Compose and Material 3. Requirements: JDK 17 and the Android SDK.
+
+```bash
+./gradlew assembleDebug          # app/build/outputs/apk/debug/NiimStudio-<version>-debug.apk
+./gradlew testDebugUnitTest      # unit tests (protocol, layout, translations)
 ```
-gradlew.bat assembleDebug
+
+| Folder | Content |
+|---|---|
+| `model/`, `data/` | label model and persistence |
+| `render/` | one renderer for the editor and the printer (8 dots/mm) |
+| `printer/`, `protocol/`, `transport/` | connection, NIIMBOT protocol, SPP/BLE – see [protocol notes](docs/protocol.md) |
+| `ui/` | Jetpack Compose screens |
+
+<details>
+<summary><img src="docs/media/icons/language.svg" width="18" align="top" alt=""> <b>Add a language</b></summary>
+
+1. Copy `app/src/main/res/values/strings.xml` to `app/src/main/res/values-<code>/strings.xml` (e.g. `values-fr`).
+2. Translate the texts. Keep placeholders like `%1$s`, `%1$d` and `{N}`. Symbol names (`sym_…`) contain a
+   list of search terms after `|`.
+3. Run `./gradlew testDebugUnitTest`.
+
+That's all: the build finds the new folder and adds the language to the picker. `TranslationsTest`
+reports missing keys, mismatching placeholders and missing plural or array entries.
+
+</details>
+
+<details>
+<summary><img src="docs/media/icons/plug.svg" width="18" align="top" alt=""> <b>Edit or add connector symbols</b></summary>
+
+The connector symbols are plain SVG files in `app/src/main/assets/connectors/` (`usba.svg`, `hdmi.svg`, …).
+Edit them in any vector editor (e.g. Inkscape) and rebuild the app.
+
+- Height 100 units (`viewBox="0 0 <width> 100"`), black outlines with `stroke-width="9"`, contacts as
+  black areas. The aspect ratio comes from the viewBox.
+- New connector: add another SVG. The file name is the key; the name comes from the string
+  `conn_<file name>` if present (translatable), otherwise from the SVG `<title>`.
+- Don't rename existing files – saved labels refer to them by name.
+
+</details>
+
+<details>
+<summary><img src="docs/media/icons/film.svg" width="18" align="top" alt=""> <b>Update the teaser GIF, screenshots and README graphics</b></summary>
+
+The teaser and the store screenshots are recorded automatically on an emulator. The script installs the
+debug APK, plays a storyboard through adb (language-independent test tags), records the screen and turns it
+into an optimised GIF inside a phone frame.
+
+```bash
+python tools/teaser/record.py --build              # English + German, needs adb, ffmpeg and Pillow
+python tools/teaser/record.py --lang de            # one language only
+python tools/teaser/record.py --gif-only           # re-render the GIFs from the last recording
+python tools/readme/make_assets.py                 # banner, icons, flags, store icon and feature graphic
 ```
 
-The APK is written to `app/build/outputs/apk/debug/app-debug.apk`.
+Outputs: `docs/media/teaser-<lang>.gif` and `fastlane/metadata/android/<locale>/images/`.
 
-## Test checklist
+</details>
 
-1. Pair the B18 in Android Bluetooth settings (optional; SPP connect will also prompt).
-2. Open the app, grant the Bluetooth permissions, tap **Scan**, pick `B18-…`, keep **Classic SPP**, tap **Connect**.
-3. The info line should show `model=B18 (3584)`. If it doesn't, share the log.
-4. Tap **Print test pattern**: a 12×40 mm label with a border, a black square in the top-left corner and mm ticks.
-5. If nothing prints or the printer refuses, try the other **Protocol variants**, then the **BLE** transport.
-6. If the output is mirrored or rotated, change **Rotation**.
-7. Use **Share log** to send the full TX/RX hex log.
+## <img src="docs/media/icons/heart.svg" width="26" align="top" alt=""> Credits
+
+- Printer protocol based on [niimbluelib](https://github.com/MultiMote/niimbluelib) by MultiMote (MIT).
+- Barcodes and QR codes: [ZXing](https://github.com/zxing/zxing) · SVG rendering: [AndroidSVG](https://github.com/BigBadaboom/androidsvg) · Symbols: [Material Icons](https://fonts.google.com/icons) (Apache 2.0).
+
+All licenses are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+## <img src="docs/media/icons/license.svg" width="26" align="top" alt=""> License
+
+NiimStudio is free software under the [GNU General Public License v3.0](LICENSE).
+
+<sub>NiimStudio is an independent project and is not affiliated with, endorsed or sponsored by NIIMBOT.
+NIIMBOT is a trademark of its respective owner and is used here only to describe compatibility.</sub>

@@ -15,5 +15,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "B18Print"
+rootProject.name = "NiimStudio"
 include(":app")

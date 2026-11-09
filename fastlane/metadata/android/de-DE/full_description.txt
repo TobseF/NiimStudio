@@ -1,0 +1,17 @@
+<p><b>NiimStudio</b> ist ein freier Open-Source-Etiketten-Designer für NIIMBOT-Etikettendrucker. Kabelfahnen, Lager-Etiketten und Preisschilder am Handy gestalten und per Bluetooth drucken – ohne Konto, ohne Cloud, ohne Werbung.</p>
+
+<p><b>Funktionen</b></p>
+<ul>
+<li><b>Was du siehst, wird gedruckt:</b> Drag &amp; Drop, Pinch-Zoom, Hilfslinien zum Einrasten, Rückgängig/Wiederholen und eine 1-Bit-Druckvorschau, die exakt dem Etikett entspricht.</li>
+<li><b>Alles, was ein Etikett braucht:</b> Text, Bilder, über 200 Symbole, Datum und MHD, Barcodes (Code 128, EAN, UPC, Code 39/93, ITF, Codabar), QR-Codes, Data Matrix, Aztec, PDF417, Seriennummern, Formen und Linien.</li>
+<li><b>Präzises Layout:</b> am Etikett ausrichten, mit dem Steuerkreuz verschieben und jeden Wert direkt bearbeiten – mit Live-Vorschau, Runden und den zuletzt genutzten Werten.</li>
+<li><b>Kabel-Etiketten:</b> 17 Steckersymbole (USB, HDMI, DisplayPort, RJ45, DC …) und Kabelfahnen, die beidseitig bedruckt um das Kabel gelegt werden.</li>
+<li><b>Profile und Vorlagen:</b> editierbare Etikettengrößen, Layouts als Vorlage mit Vorschaubild speichern.</li>
+<li><b>Serien drucken:</b> Platzhalter aus einer Liste oder CSV füllen oder Etiketten automatisch nummerieren.</li>
+<li><b>Privat:</b> läuft komplett offline und fordert nicht einmal die Internet-Berechtigung an.</li>
+<li>Deutsch und Englisch.</li>
+</ul>
+
+<p><b>Unterstützte Drucker:</b> NIIMBOT B18 (getestet). Andere NIIMBOT-Modelle mit demselben Protokoll funktionieren möglicherweise.</p>
+
+<p>Das Druckerprotokoll basiert auf niimbluelib (MIT). NiimStudio ist ein unabhängiges Projekt und steht in keiner Verbindung zu NIIMBOT.</p>

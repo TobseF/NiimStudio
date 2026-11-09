@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- NiimStudio launcher icon: a label with punch hole, selected like in the editor
+     (blue frame with handles). 108 dp canvas, content inside the 66 dp safe zone. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- label with punch hole -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M30,38h48a6,6 0,0 1,6 6v20a6,6 0,0 1,-6 6h-48a6,6 0,0 1,-6 -6v-20a6,6 0,0 1,6 -6zM33,54m-3.5,0a3.5,3.5 0,1 0,7 0a3.5,3.5 0,1 0,-7 0z" />
+    <!-- text lines -->
+    <path
+        android:fillColor="#1F2328"
+        android:pathData="M42,46.5h27a2.5,2.5 0,0 1,0 5h-27a2.5,2.5 0,0 1,0 -5zM42,56.5h18a2.5,2.5 0,0 1,0 5h-18a2.5,2.5 0,0 1,0 -5z" />
+    <!-- selection frame -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#1890FF"
+        android:strokeWidth="2"
+        android:pathData="M21,35h66v38h-66z" />
+    <!-- handles -->
+    <path
+        android:fillColor="#1890FF"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:pathData="M87,54m-4,0a4,4 0,1 0,8 0a4,4 0,1 0,-8 0zM54,73m-4,0a4,4 0,1 0,8 0a4,4 0,1 0,-8 0zM87,73m-4,0a4,4 0,1 0,8 0a4,4 0,1 0,-8 0z" />
+</vector>

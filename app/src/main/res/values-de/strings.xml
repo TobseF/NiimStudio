@@ -267,7 +267,7 @@
     <string name="query_status">Status abfragen</string>
     <string name="test_pattern">Testmuster</string>
     <string name="test_pattern_sent">Testmuster gesendet (%1$s, %2$s)</string>
-    <string name="about_text">Etikettendruck für NIIMBOT B18 über Bluetooth. Symbole: Material Icons (Apache 2.0), Barcodes: ZXing (Apache 2.0).</string>
+    <string name="about_text">Freier Open-Source-Etiketteneditor für NIIMBOT-Etikettendrucker (GPL-3.0). Nicht mit NIIMBOT verbunden. Protokoll basiert auf niimbluelib (MIT), Symbole: Material Icons, Barcodes: ZXing, SVG: AndroidSVG (Apache 2.0).</string>
     <string name="show_all_devices">Alle Geräte anzeigen</string>
     <string name="scanning">Suche läuft…</string>
     <string name="no_b18_found">Noch kein B18 gefunden. Drucker einschalten oder „Alle Geräte anzeigen“.</string>

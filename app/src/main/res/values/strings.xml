@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- English (default). To add a language, copy this file to values-<code>/strings.xml and translate it. -->
 <resources>
-    <string name="app_name" translatable="false">B18 Print</string>
+    <string name="app_name" translatable="false">NiimStudio</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="close">Close</string>
@@ -268,7 +268,7 @@
     <string name="query_status">Query status</string>
     <string name="test_pattern">Test pattern</string>
     <string name="test_pattern_sent">Test pattern sent (%1$s, %2$s)</string>
-    <string name="about_text">Label printing for the NIIMBOT B18 over Bluetooth. Symbols: Material Icons (Apache 2.0), barcodes: ZXing (Apache 2.0).</string>
+    <string name="about_text">Free, open-source label designer for NIIMBOT label printers (GPL-3.0). Not affiliated with NIIMBOT. Protocol based on niimbluelib (MIT), symbols: Material Icons, barcodes: ZXing, SVG: AndroidSVG (Apache 2.0).</string>
     <string name="show_all_devices">Show all devices</string>
     <string name="scanning">Searching…</string>
     <string name="no_b18_found">No B18 found yet. Switch the printer on or enable “Show all devices”.</string>

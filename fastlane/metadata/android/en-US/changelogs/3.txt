@@ -1,0 +1,6 @@
+First public release:
+- WYSIWYG label editor with text, images, symbols, barcodes, QR codes, dates, serial numbers and shapes
+- Connector symbols and double-sided cable flags
+- Inline value editor with rounding and recent values
+- Label profiles, templates and batch printing
+- English and German

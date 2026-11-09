@@ -15,11 +15,11 @@ val appLanguages: List<String> = listOf("en") + (file("src/main/res").listFiles(
     .sorted()
 
 android {
-    namespace = "dev.b18print"
+    namespace = "io.github.tobsef.niimstudio"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "dev.b18print"
+        applicationId = "io.github.tobsef.niimstudio"
         minSdk = 26
         targetSdk = 35
         versionCode = 3
@@ -64,6 +64,11 @@ android {
 
 kotlin {
     jvmToolchain(17)
+}
+
+// APK files are named like "NiimStudio-0.3-release.apk".
+base {
+    archivesName.set("NiimStudio-${android.defaultConfig.versionName}")
 }
 
 dependencies {
