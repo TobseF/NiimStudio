@@ -30,7 +30,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/media/teaser-de.gif" width="320" alt="NiimStudio in Aktion: Stecker und Text einfügen, Größe ändern, ausrichten, Kabelfahne und Druckvorschau">
+  <img src="docs/media/teaser-de.gif" width="320" alt="NiimStudio in Aktion: ein Etikett mit Herz-Symbol, zweizeiligem Text und QR-Code wird gestaltet, ausgerichtet und in der Vorschau gezeigt">
 </p>
 
 ## <img src="docs/media/icons/features.svg" width="26" align="top" alt=""> Funktionen
@@ -48,10 +48,10 @@
 
 <table>
   <tr>
-    <td align="center"><img src="fastlane/metadata/android/de-DE/images/phoneScreenshots/1.png" width="160" alt=""><br><sub>Stecker</sub></td>
-    <td align="center"><img src="fastlane/metadata/android/de-DE/images/phoneScreenshots/2.png" width="160" alt=""><br><sub>Werte direkt bearbeiten</sub></td>
-    <td align="center"><img src="fastlane/metadata/android/de-DE/images/phoneScreenshots/3.png" width="160" alt=""><br><sub>Ausrichten</sub></td>
-    <td align="center"><img src="fastlane/metadata/android/de-DE/images/phoneScreenshots/4.png" width="160" alt=""><br><sub>Kabelfahne</sub></td>
+    <td align="center"><img src="fastlane/metadata/android/de-DE/images/phoneScreenshots/1.png" width="160" alt=""><br><sub>Alle Elemente</sub></td>
+    <td align="center"><img src="fastlane/metadata/android/de-DE/images/phoneScreenshots/2.png" width="160" alt=""><br><sub>Symbolbibliothek</sub></td>
+    <td align="center"><img src="fastlane/metadata/android/de-DE/images/phoneScreenshots/3.png" width="160" alt=""><br><sub>QR-Codes</sub></td>
+    <td align="center"><img src="fastlane/metadata/android/de-DE/images/phoneScreenshots/4.png" width="160" alt=""><br><sub>Fanglinien</sub></td>
     <td align="center"><img src="fastlane/metadata/android/de-DE/images/phoneScreenshots/5.png" width="160" alt=""><br><sub>Druckvorschau</sub></td>
   </tr>
 </table>

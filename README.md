@@ -30,7 +30,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/media/teaser-en.gif" width="320" alt="NiimStudio in action: adding a connector and text, resizing, aligning, cable flag and print preview">
+  <img src="docs/media/teaser-en.gif" width="320" alt="NiimStudio in action: a label with a heart symbol, two-line text and a QR code is designed, aligned and previewed">
 </p>
 
 ## <img src="docs/media/icons/features.svg" width="26" align="top" alt=""> Features
@@ -48,10 +48,10 @@
 
 <table>
   <tr>
-    <td align="center"><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="160" alt=""><br><sub>Connectors</sub></td>
-    <td align="center"><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="160" alt=""><br><sub>Inline value editor</sub></td>
-    <td align="center"><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="160" alt=""><br><sub>Align &amp; arrange</sub></td>
-    <td align="center"><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="160" alt=""><br><sub>Cable flag</sub></td>
+    <td align="center"><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="160" alt=""><br><sub>All elements</sub></td>
+    <td align="center"><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="160" alt=""><br><sub>Symbol library</sub></td>
+    <td align="center"><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="160" alt=""><br><sub>QR codes</sub></td>
+    <td align="center"><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="160" alt=""><br><sub>Snap guides</sub></td>
     <td align="center"><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" width="160" alt=""><br><sub>Print preview</sub></td>
   </tr>
 </table>

@@ -4,7 +4,7 @@ Records the README teaser GIF and the store screenshots of NiimStudio.
 
 The script drives the app on an emulator or device through adb: it installs the debug APK,
 starts from a clean state, plays a short storyboard that shows the layout features
-(connectors, text, live resizing, alignment, snapping, cable flag, print preview) while
+(symbols, QR code, two-line text, resizing, alignment, snapping, print preview) while
 `screenrecord` captures the screen, and turns the video into an optimised GIF inside a
 phone frame. Run it again after UI changes to refresh the media for a new version.
 
@@ -49,8 +49,9 @@ ROOT = Path(__file__).resolve().parents[2]
 PKG = "io.github.tobsef.niimstudio"
 ACTIVITY = f"{PKG}/.MainActivity"
 LOCALES = {"en": "en-US", "de": "de-DE"}
-# Text typed next to the connector.
-LABEL_TEXT = {"en": "Dock", "de": "Dock"}
+# The teaser builds this label: heart · two-line text · QR code to the project.
+LABEL_TEXT = {"en": "Niim\nSTUDIO", "de": "Niim\nSTUDIO"}
+QR_URL = "https://github.com/TobseF/NiimStudio"
 # Size of the default label profile (12x40 White), used to map mm to screen pixels.
 LABEL_MM = (40.0, 12.0)
 
@@ -127,14 +128,23 @@ class Device:
         time.sleep(pause)
 
     def replace_text(self, rid: str, text: str, tries: int = 3):
-        """Clears the focused field and types `text`; checks the result in the UI tree."""
+        """Clears the focused field and types `text` ("\n" = new line); checks the result."""
+        got = ""
         for _ in range(tries):
-            self.key(*(["KEYCODE_MOVE_END"] + ["KEYCODE_DEL"] * 10 + ["KEYCODE_FORWARD_DEL"] * 4), pause=0.3)
-            self.type_text(text, pause=0.3)
+            self.key(*(["KEYCODE_MOVE_END"] + ["KEYCODE_DEL"] * 45 + ["KEYCODE_FORWARD_DEL"] * 45), pause=0.3)
+            lines = text.split("\n")
+            for i, line in enumerate(lines):
+                self.type_text(line, pause=0.2)
+                if i < len(lines) - 1:
+                    self.key("KEYCODE_ENTER", pause=0.2)
             got = next((n.text for n in self.nodes() if n.rid == rid), "")
-            if got.replace(",", ".") == text:
+            if got.replace(",", ".").replace("\r", "") == text:
                 return
-        print(f"    warning: '{rid}' shows '{got}' instead of '{text}'")
+        print(f"    warning: '{rid}' shows {got!r} instead of {text!r}")
+
+    def touch(self, action: str, x: int, y: int):
+        """Single touch event (DOWN / MOVE / UP), for gestures that stay pressed."""
+        self.shell(f"input motionevent {action} {x} {y}")
 
     # -- UI tree
     def nodes(self) -> list[Node]:
@@ -216,7 +226,13 @@ class Device:
 
 def prepare(dev: Device, apk: Path, lang: str):
     print(f"[{lang}] installing {apk.name}")
-    dev.run("install", "-r", str(apk))
+    try:
+        dev.run("install", "-r", str(apk))
+    except RuntimeError as e:
+        if "UPDATE_INCOMPATIBLE" not in str(e):  # other signature (e.g. release build) installed
+            raise
+        dev.run("uninstall", PKG)
+        dev.run("install", str(apk))
     dev.shell(f"am force-stop {PKG}", check=False)
     dev.shell(f"pm clear {PKG}")
     for perm in ("BLUETOOTH_SCAN", "BLUETOOTH_CONNECT"):
@@ -263,10 +279,44 @@ class Storyboard:
         self.shots_dir = shots_dir
         self.shot_no = 0
 
-    def shot(self):
+    def shot(self, no: int):
+        """Store screenshot <no>.png (numbered in README order, not in recording order)."""
         self.shot_no += 1
         self.dev.holds.append(time.time())  # key moment: stays longer in the GIF
-        self.dev.screenshot(self.shots_dir / f"{self.shot_no}.png")
+        self.dev.screenshot(self.shots_dir / f"{no}.png")
+
+    def ensure_selected(self, x_mm: float, y_mm: float):
+        """Closing the keyboard can reach the app as BACK and deselect: select again."""
+        try:
+            self.dev.find("bar_align", timeout=2)
+        except RuntimeError:
+            self.dev.tap_xy(*self.mm_to_screen(x_mm, y_mm), pause=0.8)
+
+    def deselect(self, pause: float = 0.8):
+        self.dev.tap_xy(*self.canvas_empty_spot(), pause=pause)
+
+    def tap_in_row(self, rid: str, row_rid: str, pause: float = 0.8, tries: int = 4):
+        """Taps an element of a horizontally scrolling row; row_rid is any visible item of it."""
+        w, _ = self.dev.screen_size()
+        for _ in range(tries):
+            n = None
+            try:
+                n = self.dev.find(rid, timeout=1.5)
+                if n.x1 > 8 and n.x2 < w - 8 and n.width > 40:
+                    self.dev.tap_xy(*n.center, pause=pause)
+                    return
+            except RuntimeError:
+                pass
+            y = self.dev.find(row_rid).center[1]
+            if n is not None and n.center[0] < w // 2:  # cut off on the left: scroll back
+                self.dev.swipe(int(w * 0.3), y, int(w * 0.75), y, 400, pause=0.6)
+            else:
+                self.dev.swipe(int(w * 0.8), y, int(w * 0.35), y, 400, pause=0.6)
+        self.dev.tap(rid, pause=pause)
+
+    def tap_panel(self, rid: str, pause: float = 0.8, down: bool = False):
+        n = self.panel_reveal(rid, down=down)
+        self.dev.tap_xy(*n.center, pause=pause)
 
     def canvas_empty_spot(self) -> tuple[int, int]:
         c = self.dev.find("canvas")
@@ -277,16 +327,19 @@ class Storyboard:
         toggle = self.dev.find("panel_toggle")  # bottom of the tab row
         save = self.dev.find("save")  # top of the bottom bar
         for _ in range(tries):
+            n = None
             try:
                 n = self.dev.find(rid, timeout=2)
                 if n.y1 >= toggle.y2 and n.y2 <= save.y1:
                     return n
             except RuntimeError:
                 pass
+            # Partly visible: scroll towards it; not found: scroll in the given direction.
+            towards_bottom = down if n is None else n.y2 > save.y1
             w, _ = self.dev.screen_size()
             y_from = save.y1 - 150
             y_to = y_from - 350
-            if not down:
+            if not towards_bottom:
                 y_from, y_to = y_to, y_from
             self.dev.swipe(w // 2, y_from, w // 2, y_to, 300, pause=0.6)
         return self.dev.find(rid)
@@ -302,67 +355,84 @@ class Storyboard:
         self.dev.tap("clear_all")
         self.dev.tap("confirm_ok", pause=1.0)
 
+    _mapping: tuple[float, float, float] | None = None
+
     def mm_to_screen(self, x_mm: float, y_mm: float) -> tuple[int, int]:
         """Same mapping as LabelCanvas (single-sided layout, no zoom)."""
-        c = self.dev.find("canvas")
-        pad = 28 * self.dev.density() / 160
-        w_mm, h_mm = LABEL_MM
-        s = min((c.width - 2 * pad) / w_mm, (c.height - 2 * pad) / h_mm)
-        ox = c.x1 + (c.width - w_mm * s) / 2
-        oy = c.y1 + (c.height - h_mm * s) / 2
+        if self._mapping is None:
+            c = self.dev.find("canvas")
+            pad = 28 * self.dev.density() / 160
+            w_mm, h_mm = LABEL_MM
+            s = min((c.width - 2 * pad) / w_mm, (c.height - 2 * pad) / h_mm)
+            self._mapping = (c.x1 + (c.width - w_mm * s) / 2, c.y1 + (c.height - h_mm * s) / 2, s)
+        ox, oy, s = self._mapping
         return round(ox + x_mm * s), round(oy + y_mm * s)
 
     def play(self):
+        """Builds the label heart · "Niim STUDIO" · QR code and takes the store screenshots:
+        1 main menu, 2 symbol library, 3 QR code, 4 snap guides while dragging, 5 print preview."""
         d = self.dev
         w_mm, h_mm = LABEL_MM
         time.sleep(1.2)
-        # 1. Connector: the first one goes to the left.
-        d.tap("add_connector", pause=1.0)
-        self.shot()  # connector picker
-        d.tap("connector_usbc", pause=1.2)
-        d.tap_xy(*self.canvas_empty_spot(), pause=0.9)
-        # 2. Text (starts full width in the middle).
+        # 1. Symbol library: look into "Tech", then take the heart from "Signs" -> left edge.
+        d.tap("add_symbol", pause=1.0)
+        self.tap_in_row("symcat_tech", "symcat_arrows", pause=1.2)
+        self.shot(2)
+        self.tap_in_row("symcat_signs", "symcat_tech", pause=1.0)
+        d.tap("symbol_Favorite", pause=1.2)
+        d.tap("bar_align", pause=1.0)
+        self.tap_panel("align_LEFT", pause=0.6)
+        self.tap_panel("move_right", pause=0.3)  # 2 x 0.5 mm margin
+        self.tap_panel("move_right", pause=0.6)
+        self.deselect()
+        # 2. QR code with the project link -> right edge.
+        d.tap("add_qr", pause=1.2)
+        with d.typing(d.find("qr_content")):
+            d.replace_text("qr_content", QR_URL)
+        time.sleep(0.6)
+        self.ensure_selected(w_mm / 2, h_mm / 2)
+        d.find("qr_content")
+        time.sleep(0.6)
+        self.shot(3)
+        d.tap("bar_align", pause=1.0)
+        self.tap_panel("align_RIGHT", pause=0.6)
+        self.tap_panel("move_left", pause=0.3)
+        self.tap_panel("move_left", pause=0.6)
+        self.deselect()
+        # 3. Two-line text (starts full width), centred vertically.
         d.tap("add_text", pause=1.0)
         with d.typing(d.find("content_text")):
             d.replace_text("content_text", LABEL_TEXT[self.lang])
         time.sleep(0.6)
-        # 3. Live resizing with the inline value editor and rounding.
+        self.ensure_selected(w_mm / 2, h_mm / 2)
         d.tap("bar_align", pause=1.0)
-        n = self.panel_reveal("stepper_width")
-        d.tap_xy(*n.center, pause=1.0)
-        with d.typing(self.panel_reveal("stepper_input")):  # editor unfolds below the row
-            d.replace_text("stepper_input", "17.4")
-        time.sleep(1.2)
-        self.shot()  # inline editor with rounding chips
-        n = self.panel_reveal("chip_17")
-        d.tap_xy(*n.center, pause=1.0)
-        n = self.panel_reveal("stepper_width", down=False)
-        d.tap_xy(*n.center, pause=0.8)  # fold the editor
-        # 4. Align to the right edge, next to the connector.
-        n = self.panel_reveal("align_RIGHT", down=False)
-        d.tap_xy(*n.center, pause=1.2)
-        self.shot()  # editor with selection and floating bar
-        # 5. Drag with snap guides: down and back, it snaps to the centre line.
-        x_mm = w_mm - 17 / 2 - 1
-        sx, sy = self.mm_to_screen(x_mm, h_mm / 2)
-        tx, ty = self.mm_to_screen(x_mm - 3, h_mm / 2 + 2.5)
-        d.swipe(sx, sy, tx, ty, 800, pause=0.5)
-        d.swipe(tx, ty, sx, sy + 3, 800, pause=0.8)
-        d.tap_xy(*self.canvas_empty_spot(), pause=0.8)
-        # 6. Cable flag: printed on both sides.
-        d.tap("tab_LAYOUT", pause=0.8)
-        d.tap("segment_FLAG", pause=2.2)
-        self.shot()  # flag with whole-label preview
-        d.tap("segment_SINGLE", pause=1.2)
+        self.tap_panel("align_VCENTER", pause=1.0)
+        # 4. Narrow the text box with its right handle, then centre it.
+        hx, hy = self.mm_to_screen(w_mm - 2, h_mm / 2)
+        tx, _ = self.mm_to_screen(w_mm - 2 - 16, h_mm / 2)
+        d.swipe(hx, hy, tx, hy, 800, pause=1.0)
+        self.tap_panel("align_HCENTER", pause=1.2)
+        # 5. Drag the text away and back: it snaps to the centre, the guides show.
+        path = [(1.5, 1.0), (3.5, 2.2), (5.0, 2.8), (3.5, 1.8), (1.5, 0.8), (0.4, 0.2), (0.15, 0.1)]
+        cx, cy = self.mm_to_screen(w_mm / 2, h_mm / 2)
+        d.touch("DOWN", cx, cy)
+        for dx, dy in path:
+            d.touch("MOVE", *self.mm_to_screen(w_mm / 2 + dx, h_mm / 2 + dy))
+        time.sleep(0.5)
+        self.shot(4)
+        d.touch("UP", *self.mm_to_screen(w_mm / 2 + path[-1][0], h_mm / 2 + path[-1][1]))
+        time.sleep(0.6)
+        # 6. Finished label with the main menu (all element types).
+        self.deselect(pause=1.2)
+        self.shot(1)
         # 7. Print preview.
         d.tap("print", pause=2.5)
-        self.shot()  # 1-bit print preview
+        self.shot(5)
         d.tap("print_close", pause=1.0)
-
 
 # --------------------------------------------------------------------------- video -> GIF
 
-def make_gif(mp4: Path, gif: Path, width: int, fps: int, hold: float = 1.0, hold_key: float = 2.4):
+def make_gif(mp4: Path, gif: Path, width: int, fps: int, hold: float = 0.7, hold_key: float = 2.2):
     """Video -> frames -> phone frame with transparent rounded corners -> palette GIF.
 
     Frames that hardly differ from the previous one (encoder noise, waiting for the UI dump)

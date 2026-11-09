@@ -62,21 +62,77 @@ def usbc(x: float, y: float, h: float) -> str:
             f'<g fill="{INK}"><rect x="28" y="53.04" width="189" height="15.96"/>{pins}</g></g>')
 
 
+QR_URL = "https://github.com/TobseF/NiimStudio"
+# QR code of QR_URL (version 3, error correction M), 1 = dark module. Regenerate after a URL change:
+#   python -c "import segno; q = segno.make(URL, error='m', micro=False); print([''.join('1' if c else '0' for c in r) for r in q.matrix])"
+QR_MATRIX = [
+    "11111110110101111100001111111",
+    "10000010100001101111101000001",
+    "10111010100101000000001011101",
+    "10111010011110111100101011101",
+    "10111010100011101111001011101",
+    "10000010010111100100101000001",
+    "11111110101010101010101111111",
+    "00000000011000100000000000000",
+    "10011111100011101000010010111",
+    "10100101101010110011010110110",
+    "01000111110100110000100110100",
+    "10011100010000100110111101001",
+    "11011011001011111011001100001",
+    "10111001110110011111001111111",
+    "11001010000010110101111010101",
+    "10101001000001100001000110101",
+    "01110111011010011101110001000",
+    "11000100001000010011000010110",
+    "11001111011101111001000011001",
+    "11110000100001001011001001100",
+    "11011111001011010100111111110",
+    "00000000100011010110100011000",
+    "11111110110001011111101011000",
+    "10000010111011011101100010001",
+    "10111010100011010001111111001",
+    "10111010101010101110010000001",
+    "10111010011110110010110110111",
+    "10000010001001000000001101101",
+    "11111110111011000001101010000",
+]
+
+# Material "Favorite" icon (Apache 2.0), 24 x 24 – the heart symbol of the app.
+HEART = ("M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09"
+         "C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z")
+
+
+def qr_path(x: float, y: float, size: float) -> str:
+    n = len(QR_MATRIX)
+    m = size / n
+    d = "".join(f"M{x + c * m:.2f} {y + r * m:.2f}h{m:.2f}v{m:.2f}h-{m:.2f}z"
+                for r, row in enumerate(QR_MATRIX) for c, v in enumerate(row) if v == "1")
+    return f'<path fill="{INK}" d="{d}"/>'
+
+
 def label_art(lx: float, ly: float, t: dict) -> str:
-    """Cable flag label (300 x 120): USB-C + text, the text selected like in the editor."""
-    lw, lh = 300, 120
+    """The teaser label (12 x 40 mm, 8 px/mm): heart, "Niim STUDIO" and a QR code to the project.
+    The text is being dragged: selected, with the snap guides of the editor."""
+    k = 8.0  # px per mm
+    lw, lh = 40 * k, 12 * k
+    heart = 9.6 * k
+    hx, hy = lx + 1 * k, ly + (lh - heart) / 2
+    qs = 10.8 * k
+    qx, qy = lx + lw - 1 * k - qs, ly + (lh - qs) / 2
+    tx0, tx1, ty0, ty1 = lx + 12.2 * k, lx + 27.8 * k, ly + 1.1 * k, ly + 10.9 * k
+    cx, cy = lx + lw / 2, ly + lh / 2
     return f"""
-  <g transform="rotate(-5 {lx + lw / 2} {ly + lh / 2})">
-    <rect x="{lx + 16}" y="{ly + 22}" width="{lw}" height="{lh}" rx="16" fill="{t["shadow"]}" opacity="{t["shadow_op"]}" filter="url(#blur)"/>
-    <rect x="{lx}" y="{ly}" width="{lw}" height="{lh}" rx="16" fill="#FFFFFF" stroke="{t["chip_border"]}"/>
-    <circle cx="{lx + 22}" cy="{ly + lh / 2}" r="7" fill="{t["bg2"]}" stroke="{t["chip_border"]}"/>
-    {usbc(lx + 46, ly + 30, 46)}
-    <text x="{lx + 104}" y="{ly + 102}" text-anchor="middle" font-size="17" font-weight="700" fill="{INK}">USB-C</text>
-    <text x="{lx + 232}" y="{ly + 72}" text-anchor="middle" font-size="34" font-weight="700" fill="{INK}">Dock</text>
-    <rect x="{lx + 176}" y="{ly + 36}" width="112" height="50" fill="none" stroke="{SELECT}" stroke-width="2"/>
-    <g fill="{SELECT}" stroke="#FFFFFF" stroke-width="2">
-      <circle cx="{lx + 288}" cy="{ly + 61}" r="6"/><circle cx="{lx + 232}" cy="{ly + 86}" r="6"/><circle cx="{lx + 288}" cy="{ly + 86}" r="6"/>
+  <g transform="rotate(-5 {cx} {cy})">
+    <rect x="{lx + 14}" y="{ly + 20}" width="{lw}" height="{lh}" rx="14" fill="{t["shadow"]}" opacity="{t["shadow_op"]}" filter="url(#blur)"/>
+    <rect x="{lx}" y="{ly}" width="{lw}" height="{lh}" rx="14" fill="#FFFFFF" stroke="{t["chip_border"]}"/>
+    <path fill="{INK}" transform="translate({hx} {hy}) scale({heart / 24})" d="{HEART}"/>
+    <text x="{cx}" y="{ly + 41}" text-anchor="middle" font-size="28" font-weight="700" fill="{INK}">Niim</text>
+    <text x="{cx}" y="{ly + 75}" text-anchor="middle" font-size="28" font-weight="700" fill="{INK}">STUDIO</text>
+    {qr_path(qx, qy, qs)}
+    <g stroke="{ACCENT}" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.85">
+      <path d="M{cx} {ly - 16}V{ly + lh + 16}"/><path d="M{lx - 16} {cy}H{lx + lw + 16}"/>
     </g>
+    <rect x="{tx0}" y="{ty0}" width="{tx1 - tx0}" height="{ty1 - ty0}" fill="none" stroke="{SELECT}" stroke-width="2"/>
   </g>"""
 
 
@@ -98,7 +154,7 @@ def feature_graphic() -> str:
   {logo(80, 110, 128)}
   <text x="236" y="182" font-size="64" font-weight="700" fill="{t["text"]}" letter-spacing="-1">Niim<tspan fill="{ACCENT}">Studio</tspan></text>
   <text x="239" y="226" font-size="24" fill="{t["muted"]}">Label designer for NIIMBOT printers</text>
-  {label_art(684, 206, t)}
+  {label_art(650, 214, t)}
   <text x="84" y="330" font-size="22" fill="{t["muted"]}">Text · Symbols · Barcodes · QR codes</text>
   <text x="84" y="364" font-size="22" fill="{t["muted"]}">Cable flags · Templates · Batch printing</text>
 </svg>
@@ -159,7 +215,7 @@ def banner(theme: str) -> str:
   <text x="256" y="152" font-size="68" font-weight="700" fill="{t["text"]}" letter-spacing="-1">Niim<tspan fill="{ACCENT}">Studio</tspan></text>
   <text x="259" y="199" font-size="24" fill="{t["muted"]}">Design and print labels on your NIIMBOT printer</text>
   {"".join(chip_svg)}
-  {label_art(820, 90, t)}
+  {label_art(806, 104, t)}
 </svg>
 """
 

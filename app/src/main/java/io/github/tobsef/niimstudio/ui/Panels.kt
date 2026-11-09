@@ -546,7 +546,7 @@ private fun QrContent(vm: EditorViewModel, e: QrEl) {
     var wifiOpen by remember { mutableStateOf(false) }
     OutlinedTextField(
         e.content, { v -> vm.updateElement(e.id, "qr-${e.id}") { (it as QrEl).copy(content = v) } },
-        Modifier.fillMaxWidth(), label = { Text(stringResource(R.string.qr_content)) }, minLines = 2,
+        Modifier.fillMaxWidth().testTag("qr_content"), label = { Text(stringResource(R.string.qr_content)) }, minLines = 2,
     )
     VariableChips(vm) { v -> vm.updateElement(e.id) { (it as QrEl).copy(content = it.content + v) } }
     val r = Barcodes.encode(DataVars.apply(e.content, DataVars.vars(vm.doc.data, vm.previewRow)), e.format, e.ecc)
@@ -813,10 +813,10 @@ private fun ArrangePanel(vm: EditorViewModel, e: Element) {
             // D-pad for fine positioning
             Group(Modifier.weight(0.9f).height(150.dp)) {
                 Box(Modifier.fillMaxSize()) {
-                    RepeatButton(Icons.Filled.ArrowDropUp, stringResource(R.string.move_up), { vm.nudge(e.id, 0f, -step) }, Modifier.align(Alignment.TopCenter), enabled = !e.locked, iconSize = 40.dp)
-                    RepeatButton(Icons.Filled.ArrowDropDown, stringResource(R.string.move_down), { vm.nudge(e.id, 0f, step) }, Modifier.align(Alignment.BottomCenter), enabled = !e.locked, iconSize = 40.dp)
-                    RepeatButton(Icons.AutoMirrored.Filled.ArrowLeft, stringResource(R.string.move_left), { vm.nudge(e.id, -step, 0f) }, Modifier.align(Alignment.CenterStart), enabled = !e.locked, iconSize = 40.dp)
-                    RepeatButton(Icons.AutoMirrored.Filled.ArrowRight, stringResource(R.string.move_right), { vm.nudge(e.id, step, 0f) }, Modifier.align(Alignment.CenterEnd), enabled = !e.locked, iconSize = 40.dp)
+                    RepeatButton(Icons.Filled.ArrowDropUp, stringResource(R.string.move_up), { vm.nudge(e.id, 0f, -step) }, Modifier.align(Alignment.TopCenter).testTag("move_up"), enabled = !e.locked, iconSize = 40.dp)
+                    RepeatButton(Icons.Filled.ArrowDropDown, stringResource(R.string.move_down), { vm.nudge(e.id, 0f, step) }, Modifier.align(Alignment.BottomCenter).testTag("move_down"), enabled = !e.locked, iconSize = 40.dp)
+                    RepeatButton(Icons.AutoMirrored.Filled.ArrowLeft, stringResource(R.string.move_left), { vm.nudge(e.id, -step, 0f) }, Modifier.align(Alignment.CenterStart).testTag("move_left"), enabled = !e.locked, iconSize = 40.dp)
+                    RepeatButton(Icons.AutoMirrored.Filled.ArrowRight, stringResource(R.string.move_right), { vm.nudge(e.id, step, 0f) }, Modifier.align(Alignment.CenterEnd).testTag("move_right"), enabled = !e.locked, iconSize = 40.dp)
                     Box(
                         Modifier.align(Alignment.Center).clip(RoundedCornerShape(10.dp)).background(Color.White)
                             .clickable { step = when (step) { 0.125f -> 0.5f; 0.5f -> 1f; 1f -> 5f; else -> 0.125f } }
@@ -901,7 +901,7 @@ private fun SymbolPicker(vm: EditorViewModel) {
                 modifier = Modifier.clickable { upload.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) })
             for ((c, title) in Symbols.categories) {
                 val sel = c == cat && query.isBlank()
-                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clickable { cat = c; query = "" }) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.testTag("symcat_$c").clickable { cat = c; query = "" }) {
                     Text(stringResource(title), color = if (sel) Color.Black else Color(0xFF999999), fontSize = 16.sp, fontWeight = if (sel) FontWeight.SemiBold else FontWeight.Normal)
                     Box(Modifier.padding(top = 3.dp).size(22.dp, 3.dp).clip(CircleShape).background(if (sel) AppColors.Accent else Color.Transparent))
                 }
@@ -931,6 +931,8 @@ private fun SymbolCell(vm: EditorViewModel, s: SymbolDef, fav: Boolean) {
             .clip(RoundedCornerShape(14.dp))
             .border(1.dp, AppColors.Divider, RoundedCornerShape(14.dp))
             .background(Color.White)
+            // "symbol_Favorite" for "mi:Filled.Favorite" – used by tools/teaser/record.py.
+            .testTag("symbol_" + s.key.substringAfterLast('.'))
             .combinedClickable(
                 onClick = { vm.addOrReplaceSymbol(s.key) },
                 onLongClick = {
