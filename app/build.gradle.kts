@@ -25,7 +25,7 @@ val appLanguages: List<String> = listOf("en") + (file("src/main/res").listFiles(
  *   keyAlias=niimstudio                      NIIMSTUDIO_KEY_ALIAS
  *   keyPassword=...                          NIIMSTUDIO_KEY_PASSWORD
  *
- * Without them the release APK is signed with the debug key – fine for testing, not for publishing.
+ * Without them the release APK is unsigned (F-Droid signs its builds itself).
  */
 val releaseSigning: Map<String, String>? = run {
     val props = Properties()
@@ -48,8 +48,8 @@ android {
         applicationId = "io.github.tobsef.niimstudio"
         minSdk = 26
         targetSdk = 35
-        versionCode = 4
-        versionName = "0.4"
+        versionCode = 5
+        versionName = "0.5"
         buildConfigField("String", "LANGUAGES", "\"${appLanguages.joinToString(",")}\"")
     }
 
@@ -79,11 +79,12 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig = if (releaseSigning != null) {
-                signingConfigs.getByName("release")
+            // Without a key the release APK stays unsigned – that is what F-Droid expects, as it
+            // signs the apps it builds itself. For testing on a device use the debug build.
+            if (releaseSigning != null) {
+                signingConfig = signingConfigs.getByName("release")
             } else {
-                logger.warn("NiimStudio: no release key configured (keystore.properties) – signing with the debug key.")
-                signingConfigs.getByName("debug")
+                logger.warn("NiimStudio: no release key configured (keystore.properties) – release APK is unsigned.")
             }
         }
     }

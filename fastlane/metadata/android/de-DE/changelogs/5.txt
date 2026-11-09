@@ -1,0 +1,6 @@
+Erste öffentliche Version:
+- WYSIWYG-Etiketteneditor mit Text, Bildern, Symbolen, Barcodes, QR-Codes, Datum, Seriennummern und Formen
+- Steckersymbole und beidseitige Kabelfahnen
+- Werte direkt bearbeiten, mit Runden und zuletzt genutzten Werten
+- Etikettenprofile, Vorlagen und Seriendruck
+- Deutsch und Englisch
