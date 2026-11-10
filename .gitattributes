@@ -1,0 +1,16 @@
+# LF everywhere, also on Windows: local release builds must be byte-identical to the Linux
+# builds of GitHub Actions and F-Droid (reproducible builds). Only Windows scripts keep CRLF.
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+*.png binary
+*.jpg binary
+*.gif binary
+*.webp binary
+*.mp4 binary
+*.ttf binary
+*.otf binary
+*.jar binary
+*.apk binary
+*.jks binary

@@ -188,7 +188,7 @@ def render_png(svg: str, png: Path, w: int, h: int) -> bool:
     with tempfile.TemporaryDirectory() as td:
         page = Path(td) / "page.html"
         page.write_text(f'<!doctype html><html><body style="margin:0;overflow:hidden">{svg}</body></html>',
-                        encoding="utf-8")
+                        encoding="utf-8", newline="\n")
         png.parent.mkdir(parents=True, exist_ok=True)
         subprocess.run([browser, "--headless=new", "--disable-gpu", "--hide-scrollbars",
                         f"--user-data-dir={Path(td) / 'profile'}", f"--window-size={w},{h}",
@@ -275,13 +275,13 @@ def main():
     (OUT / "flags").mkdir(parents=True, exist_ok=True)
     (OUT / "logo.svg").write_text(
         f'<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">{logo(0, 0, 160)}</svg>\n',
-        encoding="utf-8")
+        encoding="utf-8", newline="\n")
     for theme in THEMES:
-        (OUT / f"banner-{theme}.svg").write_text(banner(theme), encoding="utf-8")
+        (OUT / f"banner-{theme}.svg").write_text(banner(theme), encoding="utf-8", newline="\n")
     for name, glyph in GLYPHS.items():
-        (OUT / "icons" / f"{name}.svg").write_text(icon(glyph), encoding="utf-8")
+        (OUT / "icons" / f"{name}.svg").write_text(icon(glyph), encoding="utf-8", newline="\n")
     for name, svg in FLAGS.items():
-        (OUT / "flags" / f"{name}.svg").write_text(svg, encoding="utf-8")
+        (OUT / "flags" / f"{name}.svg").write_text(svg, encoding="utf-8", newline="\n")
     print(f"written to {OUT.relative_to(ROOT)}")
 
     store = ROOT / "fastlane" / "metadata" / "android" / "en-US" / "images"

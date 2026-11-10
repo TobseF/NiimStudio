@@ -157,6 +157,22 @@ Edit them in any vector editor (e.g. Inkscape) and rebuild the app.
 </details>
 
 <details>
+<summary><img src="docs/media/icons/download.svg" width="18" align="top" alt=""> <b>Publish a release</b></summary>
+
+Releases are built, signed and published by GitHub Actions ([release.yml](.github/workflows/release.yml)).
+The builds are reproducible, so F-Droid ships the very same APK with the author's signature.
+
+1. Raise `versionCode` and `versionName` in `app/build.gradle.kts`.
+2. Add `fastlane/metadata/android/en-US/changelogs/<versionCode>.txt` (and `de-DE`).
+3. Commit, tag with the versionName (e.g. `0.7`) and push the tag. GitHub Actions creates the release
+   with the signed APK; F-Droid picks up the tag automatically.
+
+One-time setup: the repository secrets `NIIMSTUDIO_KEYSTORE_BASE64`, `NIIMSTUDIO_STORE_PASSWORD`,
+`NIIMSTUDIO_KEY_ALIAS` and `NIIMSTUDIO_KEY_PASSWORD`. For local release builds copy
+`keystore.properties.example` to `keystore.properties`.
+
+</details>
+<details>
 <summary><img src="docs/media/icons/film.svg" width="18" align="top" alt=""> <b>Update the teaser GIF, screenshots and README graphics</b></summary>
 
 The teaser and the store screenshots are recorded automatically on an emulator. The script installs the

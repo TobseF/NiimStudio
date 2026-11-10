@@ -1,0 +1,1 @@
+- Release builds are made by GitHub Actions and are reproducible: GitHub, Obtainium, Komi Store and F-Droid ship the same APK, signed by the author

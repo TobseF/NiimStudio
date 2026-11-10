@@ -1,0 +1,1 @@
+- Release-Builds entstehen per GitHub Actions und sind reproduzierbar: GitHub, Obtainium, Komi Store und F-Droid liefern dieselbe vom Autor signierte APK

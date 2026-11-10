@@ -48,8 +48,8 @@ android {
         applicationId = "io.github.tobsef.niimstudio"
         minSdk = 26
         targetSdk = 35
-        versionCode = 5
-        versionName = "0.5"
+        versionCode = 6
+        versionName = "0.6"
         buildConfigField("String", "LANGUAGES", "\"${appLanguages.joinToString(",")}\"")
     }
 
@@ -86,7 +86,16 @@ android {
             } else {
                 logger.warn("NiimStudio: no release key configured (keystore.properties) – release APK is unsigned.")
             }
+            // Reproducible builds: no git metadata in the APK.
+            vcsInfo { include = false }
         }
+    }
+
+    dependenciesInfo {
+        // No Google-encrypted dependency list in the signing block: F-Droid rejects it, and it
+        // would differ between builds (reproducible builds).
+        includeInApk = false
+        includeInBundle = false
     }
 
     lint {
