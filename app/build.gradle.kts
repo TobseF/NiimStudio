@@ -48,8 +48,8 @@ android {
         applicationId = "io.github.tobsef.niimstudio"
         minSdk = 26
         targetSdk = 35
-        versionCode = 6
-        versionName = "0.6"
+        versionCode = 7
+        versionName = "0.6.1"
         buildConfigField("String", "LANGUAGES", "\"${appLanguages.joinToString(",")}\"")
     }
 
@@ -114,7 +114,11 @@ android {
 }
 
 kotlin {
-    jvmToolchain(17)
+    // No jvmToolchain: it needs a JDK download (foojay), which F-Droid does not allow. Gradle runs
+    // on any JDK 17+; the bytecode target is fixed here and in compileOptions.
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+    }
 }
 
 // APK files are named like "NiimStudio-0.3-release.apk".

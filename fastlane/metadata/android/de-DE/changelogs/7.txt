@@ -1,0 +1,1 @@
+- Erste Version auf F-Droid: Build-Einstellungen angepasst, keine Änderungen an der App

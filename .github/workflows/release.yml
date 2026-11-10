@@ -31,10 +31,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Same JDK as the F-Droid build server (Debian trixie, OpenJDK 21).
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: '21'
 
       # Also validates the checksum of gradle-wrapper.jar.
       - uses: gradle/actions/setup-gradle@v4
